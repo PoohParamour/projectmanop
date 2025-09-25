@@ -7,15 +7,18 @@
     <style>
         .Menu-Container {
             display: grid;
-            grid-template-columns: (3, 1fr);
+            grid-template-columns: (2, 1fr);
+        }
+        .Menu {
+            
         }
     </style>
 </head>
 <body>
-    <div class="Menu-Container"
+    <div class="Menu-Container">
         <% data.forEach((item)=>{ %>
             <div class="Menu">
-                <img src="/img/menu/" alt="<%=item.name_eng%>">
+                <img src="/img/menu/<%=item.category_id%>/<%=item.name_eng%>.png" alt="">
                 <%=item.name_thai%>
             </div>
 

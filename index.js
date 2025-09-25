@@ -28,6 +28,8 @@ app.get("/", (req, res) => {
     res.render('home');
 });
 
+
+// path ของเมนูทุกอย่าง
 app.get('/menu', function (req, res) {
     const query = 'SELECT * FROM MenuItem;';
     db.all(query, (err, rows) => {
@@ -36,6 +38,32 @@ app.get('/menu', function (req, res) {
         }
         console.log(rows);
         res.render('menu', { data: rows });
+    });
+});
+
+// path ของเมนูหมวดหมู่ PASTA & RICE
+app.get('/pasta', function (req, res) {
+    const query = `SELECT * FROM MenuItem
+                   WHERE category_id = 2;`;
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+        }
+        console.log(rows);
+        res.render('menu_pasta', { data: rows });
+    });
+});
+
+// path ของเมนูหมวดหมู่ Steak
+app.get('/steak', function (req, res) {
+    const query = `SELECT * FROM MenuItem
+                   WHERE category_id = 3;`;
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+        }
+        console.log(rows);
+        res.render('menu_steak', { data: rows });
     });
 });
 
