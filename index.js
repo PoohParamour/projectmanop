@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();
 const i18n = require("i18n");
 
 // Creating the Express server
-const app = express();
+
 
 // Connect to SQLite database
 let db = new sqlite3.Database('project.db', (err) => {
