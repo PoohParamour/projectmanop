@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .Menu-Container {
+            display: grid;
+            grid-template-columns: (3, 1fr);
+        }
+    </style>
+</head>
+<body>
+    <div class="Menu-Container"
+        <% let cnt=1 %>
+        <% data.forEach((item)=>{ %>
+            <%=item.id%>
+            <div class="Menu">
+                <%=item.id%>
+            </div>
+            <%cnt++%>
+        <% }); %>
+    </div>
+</body>
+</html>

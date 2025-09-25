@@ -28,7 +28,16 @@ app.get("/", (req, res) => {
     res.render('home');
 });
 
-
+app.get('/menu', function (req, res) {
+    const query = 'SELECT * FROM MenuItem;';
+    db.all(query, (err, rows) => {
+        if (err) {
+            console.log(err.message);
+        }
+        console.log(rows);
+        res.render('menu', { data: rows });
+    });
+});
 
 app.listen(port, () => {
     console.log(`Starting server at port ${port}`);
