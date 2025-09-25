@@ -1,0 +1,26 @@
+{
+  "name": "projectmanop",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PoohParamour/projectmanop.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PoohParamour/projectmanop/issues"
+  },
+  "homepage": "https://github.com/PoohParamour/projectmanop#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "i18n": "^0.15.1",
+    "sqlite3": "^5.1.7"
+  }
+}
