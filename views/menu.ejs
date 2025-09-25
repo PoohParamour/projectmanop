@@ -13,13 +13,12 @@
 </head>
 <body>
     <div class="Menu-Container"
-        <% let cnt=1 %>
         <% data.forEach((item)=>{ %>
-            <%=item.id%>
             <div class="Menu">
-                <%=item.id%>
+                <img src="/img/menu/" alt="<%=item.name_eng%>">
+                <%=item.name_thai%>
             </div>
-            <%cnt++%>
+
         <% }); %>
     </div>
 </body>
