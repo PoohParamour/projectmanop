@@ -5,7 +5,7 @@ const sqlite3 = require('sqlite3').verbose();
 const i18n = require("i18n");
 
 // Creating the Express server
-
+const app = express();
 
 // Connect to SQLite database
 let db = new sqlite3.Database('project.db', (err) => {
@@ -17,7 +17,7 @@ let db = new sqlite3.Database('project.db', (err) => {
 
 
 // static resourse & templating engine
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 // Set EJS as templating engine
 app.set('view engine', 'ejs');
 
