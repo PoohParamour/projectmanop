@@ -1,41 +1,279 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1200, height=2000, initial-scale=1.0" />
+    <title>Menu</title>
+
     <style>
+        :root {
+            --text: #fff;
+            --brown: #7b5237;
+            /* สีน้ำตาลกระดาน */
+            --brown-2: #6a452d;
+            --chip-gray: #e7e0d6;
+            --chip-text: #2a2018;
+            --orange: #d88734;
+            --orange-2: #f0a24e;
+            --glass: rgba(255, 255, 255, .06);
+            --header-h: 210px;
+            --footer-h: 230px;
+        }
+
+        html,
         body {
-            margin: 0px;
-        }
-
-        .abc {
+            height: 100%;
+            margin: 0;
+            background: #0b0c0e;
+            font-family: system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
+            color: var(--text);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
-        .bottom {
+        /* เฟรม 1200x2000 และพื้นหลังเหมือนหน้า Home */
+        .stage {
+            position: relative;
+            width: 1200px;
+            height: 2000px;
+            overflow: hidden;
+            border-radius: 18px;
+            background:
+                linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
+                url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .06);
+        }
+
+        /* header/footer แบบ glass */
+        .header-shell,
+        .footer-shell {
             position: fixed;
             left: 0;
             right: 0;
-            /* หรือ width: 100% */
-            bottom: 0;
             z-index: 1000;
-            /* กันถูกซ้อนทับ */
-            color: #fff;
-            text-align: center;
-            margin: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
         }
+
+        .header-shell {
+            top: 0;
+            height: var(--header-h);
+            background: linear-gradient(to bottom, rgba(0, 0, 0, .35), rgba(0, 0, 0, .05));
+            border-bottom: 1px solid var(--glass);
+        }
+
+        .footer-shell {
+            bottom: 0;
+            height: var(--footer-h);
+            background: linear-gradient(to top, rgba(0, 0, 0, .45), rgba(0, 0, 0, .05));
+            border-top: 1px solid var(--glass);
+        }
+
+        /* โซนเลื่อน */
+        .scroll-area {
+            position: relative;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .container {
+            height: 100%;
+            overflow-y: auto;
+            padding: 18px 24px 24px;
+            padding-top: calc(var(--header-h) + 6px);
+            padding-bottom: calc(var(--footer-h) + 10px);
+        }
+
+        /* ===== กระดานสีน้ำตาลที่รวม chips + grid ===== */
+        .board {
+            max-width: 860px;
+            margin: 0 auto;
+            background: linear-gradient(180deg, var(--brown), var(--brown-2));
+            border-radius: 18px;
+            padding: 14px 14px 18px;
+            box-shadow: 0 14px 32px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(255, 255, 255, .04);
+        }
+
+        /* Chips บนกระดาน */
+        .menu-topbar {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .chip {
+            appearance: none;
+            border: 0;
+            cursor: pointer;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: 999px;
+            letter-spacing: .2px;
+            color: var(--chip-text);
+            background: var(--chip-gray);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, .18);
+            transition: transform .08s ease, filter .18s ease, box-shadow .18s ease;
+        }
+
+        .chip:hover {
+            transform: translateY(-1px);
+        }
+
+        .chip.is-active {
+            color: #fff;
+            background:
+                radial-gradient(120px 90px at 50% 0%, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 70%),
+                linear-gradient(180deg, var(--orange-2), var(--orange));
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .28), 0 0 26px rgba(208, 135, 52, .35);
+        }
+
+        /* Grid 2 คอลัมน์เหมือนภาพ */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        /* การ์ดพื้นดำโค้งมน + เงา + noise */
+        .menu-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            background: #121212;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
+            border: 1px solid rgba(255, 255, 255, .04);
+            transition: transform .12s ease, box-shadow .18s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 36px rgba(0, 0, 0, .45);
+        }
+
+        .menu-card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+            opacity: .12;
+            mix-blend-mode: overlay;
+        }
+
+        /* รูป + เนื้อหาในการ์ด */
+        .menu-media {
+            width: 100%;
+            aspect-ratio: 16/11;
+            object-fit: cover;
+            display: block;
+        }
+
+        .menu-body {
+            padding: 10px 12px 12px;
+        }
+
+        .menu-title {
+            margin: 6px 0 8px;
+            font-size: 18px;
+            font-weight: 900;
+            text-align: center;
+        }
+
+        .menu-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .price {
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        /* ปุ่ม + วงกลมส้ม */
+        .add-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 22px;
+            font-weight: 900;
+            line-height: 0;
+            background:
+                radial-gradient(80px 60px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
+                linear-gradient(180deg, var(--orange-2), var(--orange));
+            border: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06),
+                0 6px 14px rgba(0, 0, 0, .25);
+            transition: transform .08s ease, filter .18s ease;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-1px);
+            filter: saturate(1.06);
+        }
+
+        /* (ถ้ามี bottom-nav ใน footer.ejs อยู่แล้ว สไตล์จะเกาะพื้นแก้วอยู่) */
     </style>
 </head>
 
 <body>
-    <div style="position: fixed;"><%- include("header") %></div>
-    <div class="abc">
-        <div style="overflow-y: auto; margin-top: 210px; margin-bottom: 230px;"><%- include("menu") %></div>
-        <div class="bottom"><%- include("footer") %></div>
-    </div>
+    <main class="stage">
+        <div class="header-shell"></div>
+
+        <section class="scroll-area">
+            <div class="container">
+                <!-- ถ้า menu.ejs ของคุณสร้าง chips+grid ตามคลาสด้านล่าง จะสวยทันที -->
+                <!-- ตัวอย่าง (เผื่ออ้างอิง): 
+          <div class="menu-topbar" id="chipBar">
+            <button class="chip is-active" data-cat="all">ทั้งหมด</button>
+            <button class="chip" data-cat="1">คอมโบเซ็ต</button>
+            ...
+          </div>
+          <div class="menu-grid" id="menuGrid">
+            <article class="menu-card" data-cat="1">
+              <img class="menu-media" src="/img/menu/1/xxx.png" alt="...">
+              <div class="menu-body">
+                <h3 class="menu-title">ชื่อเมนู</h3>
+                <div class="menu-meta">
+                  <div class="price">฿ 109</div>
+                  <a class="add-btn" href="/more/123">+</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        -->
+                <%- include("menu") %>
+            </div>
+        </section>
+
+        <div class="footer-shell"></div>
+    </main>
+
+    <script>
+        // ฟิลเตอร์ตามหมวด (ต้องมี #chipBar และ #menuGrid)
+        (function () {
+            const chips = Array.from(document.querySelectorAll('#chipBar .chip'));
+            const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
+            if (!chips.length || !cards.length) return;
+
+            function activate(cat) {
+                chips.forEach(ch => ch.classList.toggle('is-active', ch.dataset.cat === cat));
+                cards.forEach(c => c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none');
+                document.querySelector('.container')?.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            chips.forEach(chip => chip.addEventListener('click', () => activate(chip.dataset.cat)));
+        })();
+    </script>
 </body>
 
 </html>

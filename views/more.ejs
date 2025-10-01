@@ -28,7 +28,7 @@
       <% group.values.forEach(opt => { %>
         <label>
           <input type="<%= group.max_select > 1 ? 'checkbox' : 'radio' %>" 
-                 name="options_<%= group.option_group_id %>[]" 
+                 name="options_<%= group.option_group_id %>[]"
                  value="<%= opt.option_value_id %>|<%= opt.extra_price %>">
           <%= opt.name %> 
           <% if (opt.extra_price > 0) { %>(+฿<%= opt.extra_price %>)<% } %>

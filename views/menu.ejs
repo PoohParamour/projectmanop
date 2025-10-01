@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,14 +10,15 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
         }
-        
+
         img {
             width: 100%;
         }
     </style>
 </head>
+
 <body>
-    <div class="menu-Container">
+    <!-- <div class="menu-Container">
         <% data.forEach((item)=>{ %>
             <div class="card">
                 <img src="/img/menu/<%=item.category_id%>/<%=item.name_eng%>.png" alt="">
@@ -25,6 +27,66 @@
             </div>
 
         <% }); %>
-    </div>
+    </div> -->
+
+<!-- ===== Chips หมวดอาหาร ===== -->
+<% /* map ชื่อหมวด (แก้ให้ตรงระบบจริงของคุณได้) */ 
+   const CAT_LABELS = { 1:'คอมโบเซ็ต', 2:'สเต็ก', 3:'ข้าว & พาสต้า', 4:'ของทานเล่น', 5:'สลัด' };
+   const seenCats = {};
+%>
+<div class="menu-topbar" id="chipBar">
+  <button class="chip is-active" data-cat="all">ทั้งหมด</button>
+  <% data.forEach(item => { 
+       const key = item.category_id;
+       if (!seenCats[key]) { seenCats[key] = true; %>
+        <button class="chip" data-cat="<%= key %>"><%= CAT_LABELS[key] || ('หมวด ' + key) %></button>
+  <% }}); %>
+</div>
+
+<!-- ===== Grid รายการเมนู ===== -->
+<div class="menu-grid" id="menuGrid">
+  <% data.forEach(item => { %>
+    <article class="menu-card" data-cat="<%= item.category_id %>">
+      <img 
+        class="menu-media" 
+        src="/img/menu/<%= item.category_id %>/<%= item.name_eng %>.png" 
+        alt="<%= item.name_thai %>">
+      
+      <div class="menu-body">
+        <h3 class="menu-title"><%= item.name_thai %></h3>
+
+        <div class="menu-meta">
+          <% if (typeof item.price !== 'undefined' && item.price !== null) { %>
+            <div class="price">฿ <%= Number(item.price).toLocaleString() %></div>
+          <% } else { %>
+            <div></div>
+          <% } %>
+
+          <a href="/more/<%= item.menu_item_id %>" 
+             class="add-btn" 
+             aria-label="ดูรายละเอียด/เพิ่ม <%= item.name_thai %>">+</a>
+        </div>
+      </div>
+    </article>
+  <% }); %>
+</div>
+
+<!-- ===== JS ฟิลเตอร์หมวด ===== -->
+<script>
+  (function(){
+    const chips = Array.from(document.querySelectorAll('#chipBar .chip'));
+    const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
+
+    function activate(cat){
+      chips.forEach(ch => ch.classList.toggle('is-active', ch.dataset.cat === cat));
+      cards.forEach(c => c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none');
+      document.querySelector('.container')?.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    chips.forEach(ch => ch.addEventListener('click', () => activate(ch.dataset.cat)));
+  })();
+</script>
+
 </body>
+
 </html>
