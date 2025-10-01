@@ -1,0 +1,54 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+  <a href="/menu" class="close-btn">×</a>
+  <div class="card">
+    <!-- รูปเมนู -->
+    <img src="/img/menu/<%= item.category_id %>/<%= item.name_eng %>.png" 
+         alt="<%= item.name %>" class="food">
+
+    <!-- ชื่อและราคา -->
+    <h2><%= item.name %></h2>
+    <p><%= item.detail %></p>
+    <div class="price">฿ <%= item.base_price %></div>
+
+    <!-- ฟอร์ม -->
+    <form action="/add-to-cart" method="POST">
+  <input type="hidden" name="menu_item_id" value="<%= item.menu_item_id %>">
+  <input type="hidden" id="qty" name="quantity" value="1">
+
+  <% options.forEach(group => { %>
+    <fieldset>
+      <legend><%= group.name %></legend>
+
+      <% group.values.forEach(opt => { %>
+        <label>
+          <input type="<%= group.max_select > 1 ? 'checkbox' : 'radio' %>" 
+                 name="options_<%= group.option_group_id %>[]" 
+                 value="<%= opt.option_value_id %>|<%= opt.extra_price %>">
+          <%= opt.name %> 
+          <% if (opt.extra_price > 0) { %>(+฿<%= opt.extra_price %>)<% } %>
+        </label><br>
+      <% }) %>
+    </fieldset>
+  <% }) %>
+
+  <button type="submit">ยืนยัน</button>
+</form>
+  </div>
+
+  <script>
+    function changeQty(change) {
+      let qtyInput = document.getElementById("qty");
+      let current = parseInt(qtyInput.value);
+      let next = current + change;
+      if (next < 1) next = 1;
+      qtyInput.value = next;
+    }
+  </script>
+</body>
+</html>

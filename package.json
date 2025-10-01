@@ -18,9 +18,15 @@
   },
   "homepage": "https://github.com/PoohParamour/projectmanop#readme",
   "dependencies": {
+    "@tailwindcss/cli": "^4.1.13",
+    "cookie-parser": "^1.4.7",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
+    "express-session": "^1.18.2",
     "i18n": "^0.15.1",
     "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "tailwindcss": "^4.1.13"
   }
 }

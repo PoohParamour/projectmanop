@@ -1,3 +1,9 @@
+    @import "tailwindcss";
+
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+
     :root {
         --hero-bg: url("https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1400&auto=format&fit=crop");
         --gold: #f8d26a;

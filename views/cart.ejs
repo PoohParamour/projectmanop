@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>ตะกร้าอาหาร</title>
+</head>
+<body>
+    <a href="/main">×</a>
+
+    <h1>ตะกร้าอาหาร</h1>
+
+    <% if (data.length === 0) { %>
+      <div>ยังไม่มีสินค้าในตะกร้า</div>
+    <% } else { %>
+      <% let total = 0; %>
+      <% data.forEach(function(item){ %>
+          <img src="/img/menu/<%= item.category_id %>/<%= item.name_eng %>.png" alt="<%= item.name_thai %>">
+            <h3><%= item.name_thai %></h3>
+            <p><%= item.detail || '-' %></p>
+
+            <% if (item.options && item.options.length > 0) { %>
+              <ul>
+                <% item.options.forEach(function(opt){ %>
+                  <li><%= opt.name %> <% if(opt.extra_price > 0){ %>(+฿<%= opt.extra_price %>)<% } %></li>
+                <% }) %>
+              </ul>
+            <% } %>
+
+              ฿ <%= item.final_price %>
+              <span>× <%= item.quantity %></span>
+        <% total += item.final_price * item.quantity; %>
+      <% }) %>
+
+        <span>ยอดรวม</span>
+        <span>฿ <%= total %></span>
+      </div>
+      <button>ชำระเงิน</button>
+    <% } %>
+  </div>
+</body>
+</html>

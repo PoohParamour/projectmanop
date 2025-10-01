@@ -5,21 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <style>
-        .Menu-Container {
+        .menu-Container {
             display: grid;
-            grid-template-columns: (2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
         }
-        .Menu {
-            
+        
+        img {
+            width: 100%;
         }
     </style>
 </head>
 <body>
-    <div class="Menu-Container">
+    <div class="menu-Container">
         <% data.forEach((item)=>{ %>
-            <div class="Menu">
+            <div class="card">
                 <img src="/img/menu/<%=item.category_id%>/<%=item.name_eng%>.png" alt="">
-                <%=item.name_thai%>
+                <p><%=item.name_thai%></p>
+                <a href="/more/<%=item.menu_item_id%>"><button>+</button></a>
             </div>
 
         <% }); %>

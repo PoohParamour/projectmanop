@@ -1,13 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        body {
+            margin: 0px;
+        }
+
+        .abc {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .bottom {
+            position: fixed;
+            left: 0;
+            right: 0;
+            /* หรือ width: 100% */
+            bottom: 0;
+            z-index: 1000;
+            /* กันถูกซ้อนทับ */
+            color: #fff;
+            text-align: center;
+            margin: 0px;
+        }
+    </style>
 </head>
+
 <body>
-    <%- include("header") %>
-    <%- include("category") %>   <%- include("menu") %>
-    
+    <div style="position: fixed;"><%- include("header") %></div>
+    <div class="abc">
+        <div style="overflow-y: auto; margin-top: 210px; margin-bottom: 230px;"><%- include("menu") %></div>
+        <div class="bottom"><%- include("footer") %></div>
+    </div>
 </body>
+
 </html>
