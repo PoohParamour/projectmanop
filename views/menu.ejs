@@ -1,92 +1,315 @@
-<!DOCTYPE html>
-<html lang="en">
+<% const CAT_LABELS={ 1: lang==="th" ? "คอมโบเซ็ต" : "Combo Set" , 2: lang==="th" ? "ข้าว & พาสต้า" : "Rice & Pasta" ,
+  3: lang==="th" ? "สเต็ก" : "Steak" , 4: lang==="th" ? "เบอร์เกอร์" : "Burgers" , 5: lang==="th" ? "ของทานเล่น"
+  : "Appetizer" , 6: lang==="th" ? "เครื่องดื่ม" : "Drinks" , }; const seenCats={}; %>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <section id="menuSection">
     <style>
-        .menu-Container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-        }
+      #menuSection {
+        --brand: #10B34A;
+        --ink: #6b7280;
+        --ink-strong: #374151;
+        --divider: #e5e7eb;
+      }
 
-        img {
-            width: 100%;
+      /* TAB BAR */
+      #menuSection .menu-topbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        background: #fff;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 6px 30px;
+        border-bottom: 2px solid var(--divider);
+      }
+
+      #menuSection .tab-icon {
+        flex: 0 0 auto;
+        width: 44px;
+        height: 44px;
+        display: grid;
+        place-items: center;
+        border: 0;
+        background: transparent;
+        border-radius: 999px;
+        color: #4b5563;
+        cursor: pointer;
+      }
+
+      #menuSection .tab-icon:active {
+        background: #f3f4f6;
+      }
+
+      #menuSection .tab-icon svg {
+        width: 26px;
+        height: 26px;
+        display: block;
+      }
+
+      /* แถบชิปเลื่อนแนวนอน */
+      #menuSection .chip-viewport {
+        position: relative;
+        flex: 1 1 auto;
+        height: 100%;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scroll-behavior: smooth;
+        overscroll-behavior-inline: contain;
+        scroll-snap-type: x proximity;
+        scrollbar-width: none;
+        -webkit-mask-image: linear-gradient(to right, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
+        mask-image: linear-gradient(to right, transparent 0, black 28px, black calc(100% - 28px), transparent 100%);
+        touch-action: pan-x;
+        cursor: grab;
+      }
+
+      #menuSection .chip-viewport.is-dragging {
+        cursor: grabbing;
+      }
+
+      #menuSection .chip-viewport::-webkit-scrollbar {
+        display: none;
+      }
+
+      #menuSection .chip-track {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+        height: 100%;
+        padding: 0 8px;
+      }
+
+      #menuSection .chip {
+        flex: 0 0 auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        cursor: pointer;
+        color: var(--ink);
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: .1px;
+        padding: 0 16px;
+        white-space: nowrap;
+        scroll-snap-align: center;
+        text-decoration: none;
+        transition: color .18s ease;
+      }
+
+      #menuSection .chip:hover {
+        color: var(--ink-strong);
+      }
+
+      #menuSection .chip.is-active {
+        color: var(--brand);
+      }
+
+      /* GRID เมนู */
+      #menuSection .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 40px;
+        padding: 24px;
+      }
+
+      #menuSection .menu-card {
+        background: #FFFFFF80;
+        border-radius: 30px;
+        padding: 0 0 10px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
+        overflow: hidden;
+        color: #000000;
+      }
+
+      #menuSection .menu-media {
+        width: 100%;
+        aspect-ratio: 16/11;
+        object-fit: cover;
+        display: block;
+      }
+
+      #menuSection .menu-body {
+        padding: 10px 14px;
+      }
+
+      #menuSection .menu-title {
+        text-align: center;
+        margin: 6px 0 10px;
+        font-weight: 600;
+        font-size: 36px;
+      }
+
+      #menuSection .menu-meta {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      #menuSection .price {
+        font-weight: 500;
+      }
+
+      #menuSection .add-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        color: #fff;
+        background: linear-gradient(180deg, #f0a24e, #d88734);
+        border: 1px solid rgba(255, 255, 255, .08);
+        text-decoration: none;
+      }
+
+      @media (max-width: 900px) {
+        #menuSection .chip {
+          font-size: 22px;
+          padding: 0 12px;
         }
+      }
     </style>
-</head>
 
-<body>
-    <!-- <div class="menu-Container">
-        <% data.forEach((item)=>{ %>
-            <div class="card">
-                <img src="/img/menu/<%=item.category_id%>/<%=item.name_eng%>.png" alt="">
-                <p><%=item.name_thai%></p>
-                <a href="/more/<%=item.menu_item_id%>"><button>+</button></a>
-            </div>
+    <!-- TAB BAR -->
+    <div class="menu-topbar">
+      <button class="tab-icon" aria-label="หมวดหมู่">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="8" y1="6" x2="21" y2="6"></line>
+          <line x1="8" y1="12" x2="21" y2="12"></line>
+          <line x1="8" y1="18" x2="21" y2="18"></line>
+          <circle cx="4" cy="6" r="2"></circle>
+          <circle cx="4" cy="12" r="2"></circle>
+          <circle cx="4" cy="18" r="2"></circle>
+        </svg>
+      </button>
 
-        <% }); %>
-    </div> -->
-
-<!-- ===== Chips หมวดอาหาร ===== -->
-<% /* map ชื่อหมวด (แก้ให้ตรงระบบจริงของคุณได้) */ 
-   const CAT_LABELS = { 1:'คอมโบเซ็ต', 2:'สเต็ก', 3:'ข้าว & พาสต้า', 4:'ของทานเล่น', 5:'สลัด' };
-   const seenCats = {};
-%>
-<div class="menu-topbar" id="chipBar">
-  <button class="chip is-active" data-cat="all">ทั้งหมด</button>
-  <% data.forEach(item => { 
-       const key = item.category_id;
-       if (!seenCats[key]) { seenCats[key] = true; %>
-        <button class="chip" data-cat="<%= key %>"><%= CAT_LABELS[key] || ('หมวด ' + key) %></button>
-  <% }}); %>
-</div>
-
-<!-- ===== Grid รายการเมนู ===== -->
-<div class="menu-grid" id="menuGrid">
-  <% data.forEach(item => { %>
-    <article class="menu-card" data-cat="<%= item.category_id %>">
-      <img 
-        class="menu-media" 
-        src="/img/menu/<%= item.category_id %>/<%= item.name_eng %>.png" 
-        alt="<%= item.name_thai %>">
-      
-      <div class="menu-body">
-        <h3 class="menu-title"><%= item.name_thai %></h3>
-
-        <div class="menu-meta">
-          <% if (typeof item.price !== 'undefined' && item.price !== null) { %>
-            <div class="price">฿ <%= Number(item.price).toLocaleString() %></div>
-          <% } else { %>
-            <div></div>
-          <% } %>
-
-          <a href="/more/<%= item.menu_item_id %>" 
-             class="add-btn" 
-             aria-label="ดูรายละเอียด/เพิ่ม <%= item.name_thai %>">+</a>
+      <div class="chip-viewport" id="chipViewport">
+        <div class="chip-track" id="chipBar">
+          <% const ADDED=new Set(); %>
+            <a class="chip is-active" data-cat="all">
+              <%= lang==="th" ? "ทั้งหมด" : "All" %>
+            </a>
+            <% data.forEach(item=> { const key = item.category_id; if(!ADDED.has(key)){ ADDED.add(key); %>
+              <a class="chip" data-cat="<%= key %>">
+                <%= CAT_LABELS[key] || (lang==="th" ? "หมวด " + key : "Category " + key) %>
+              </a>
+              <% }}); %>
         </div>
       </div>
-    </article>
-  <% }); %>
-</div>
+    </div>
 
-<!-- ===== JS ฟิลเตอร์หมวด ===== -->
-<script>
-  (function(){
-    const chips = Array.from(document.querySelectorAll('#chipBar .chip'));
-    const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
+    <!-- GRID รายการเมนู -->
+    <div class="menu-grid" id="menuGrid">
+      <% data.forEach(item=> { %>
+        <article class="menu-card" data-cat="<%= item.category_id %>">
+          <img class="menu-media" src="/img/menu/<%= item.category_id %>/<%= item.name_eng %>.png"
+            alt="<%= item.name_thai %>">
+          <div class="menu-body">
+            <h3 class="menu-title">
+              <%= item.name %>
+            </h3>
+            <div class="menu-meta">
+              <div class="price">฿ <%= Number(item.base_price) %>
+              </div>
+              <a href="/more/<%= item.menu_item_id %>" class="add-btn"
+                aria-label="ดูรายละเอียด/เพิ่ม <%= item.name_thai %>">+</a>
+            </div>
+          </div>
+        </article>
+        <% }); %>
+    </div>
 
-    function activate(cat){
-      chips.forEach(ch => ch.classList.toggle('is-active', ch.dataset.cat === cat));
-      cards.forEach(c => c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none');
-      document.querySelector('.container')?.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    <script>
+      (function () {
+        const vp = document.getElementById('chipViewport');
+        const bar = document.getElementById('chipBar');
+        const chips = () => Array.from(bar.querySelectorAll('.chip'));
+        const cards = Array.from(document.querySelectorAll('#menuSection #menuGrid .menu-card'));
 
-    chips.forEach(ch => ch.addEventListener('click', () => activate(ch.dataset.cat)));
-  })();
-</script>
+        // ฟิลเตอร์ + active + เลื่อนชิปให้อยู่กลาง
+        function activate(cat, btn) {
+          chips().forEach(c => c.classList.toggle('is-active', c === btn || c.dataset.cat === cat));
+          cards.forEach(c => c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none');
+          if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          document.querySelector('.container')?.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-</body>
+        // คลิกชิป
+        let dragging = false;
+        bar.addEventListener('click', e => {
+          const btn = e.target.closest('.chip');
+          if (!btn || dragging) return;
+          activate(btn.dataset.cat || 'all', btn);
+        });
 
-</html>
+        // ===== Inertia drag สำหรับเมาส์ (ทัชมี momentum อยู่แล้ว) =====
+        if (vp) {
+          let down = false, startX = 0, startLeft = 0, lastX = 0, lastT = 0, vx = 0, raf = null;
+
+          vp.addEventListener('pointerdown', e => {
+            if (e.pointerType !== 'mouse') return;        // ทัช/เพน ปล่อย native
+            down = true; dragging = false; startX = e.clientX; startLeft = vp.scrollLeft;
+            lastX = startX; lastT = performance.now(); vx = 0; vp.classList.add('is-dragging');
+          });
+          vp.addEventListener('pointermove', e => {
+            if (!down || e.pointerType !== 'mouse') return;
+            const now = performance.now(), dx = e.clientX - startX;
+            if (!dragging && Math.abs(dx) > 6) dragging = true;
+            if (dragging) {
+              vp.scrollLeft = startLeft - dx;
+              vx = (e.clientX - lastX) / Math.max(1, now - lastT); // px/ms
+              lastX = e.clientX; lastT = now;
+              e.preventDefault();
+            }
+          }, { passive: false });
+
+          function endDrag(e) {
+            if (e && e.pointerType !== 'mouse') return;
+            if (dragging) {
+              const DECAY = 0.0028;         // แรงหน่วง (มาก = หยุดไว)
+              const MINV = 0.02;           // หยุดเมื่อช้ามาก ๆ
+              const MAX = Math.max(0, vp.scrollWidth - vp.clientWidth);
+              let v = -vx, s = vp.scrollLeft, prev = performance.now();
+              cancelAnimationFrame(raf);
+              (function step(t) {
+                const dt = t - prev; prev = t;
+                v *= Math.exp(-DECAY * dt);
+                if (Math.abs(v) < MINV) return;
+                s += v * dt;
+                if (s < 0) { s = 0; v = 0; }
+                if (s > MAX) { s = MAX; v = 0; }
+                vp.scrollLeft = s;
+                raf = requestAnimationFrame(step);
+              })(prev);
+            }
+            down = false; vp.classList.remove('is-dragging');
+            // กันคลิกหลุดครั้งสุดท้ายจากการลาก
+            setTimeout(() => dragging = false, 0);
+          }
+          vp.addEventListener('pointerup', endDrag);
+          vp.addEventListener('pointercancel', endDrag);
+          vp.addEventListener('pointerleave', endDrag);
+
+          // รองรับสก์โรลลิ่งแนวตั้งให้กลายเป็นแนวนอนบนเมาส์ล้อ
+          vp.addEventListener('wheel', e => {
+            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+              vp.scrollLeft += e.deltaY;
+              e.preventDefault();
+            }
+          }, { passive: false });
+
+          // ถ้ากำลังลากอยู่ ให้ยกเลิก click
+          vp.addEventListener('click', e => { if (dragging) { e.preventDefault(); e.stopPropagation(); } });
+        }
+
+        // ค่าเริ่มต้น
+        const first = chips()[0];
+        if (first) first.classList.add('is-active');
+      })();
+    </script>
+  </section>

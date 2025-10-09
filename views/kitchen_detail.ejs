@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1200, height=2000, initial-scale=1.0" />
+  <title>ครัว – รายละเอียด</title>
+
+  <!-- ฟอนต์เดียวกับโปรเจกต์ -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      /* ปรับสเกลทั้งหน้าทีเดียว */
+      --scale: 1.25;
+
+      --font-ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", sans-serif;
+      --on-dark:#fff;
+      --ink:#E5E7EB;
+      --muted:#C9CED6;
+      --brand-1:#F0A24E;
+      --brand-2:#D88734;
+      --ok:#22C55E;
+      --border: rgba(255,255,255,.14);
+      --radius-lg: calc(20px * var(--scale));
+      --radius-md: calc(16px * var(--scale));
+      --header-h: calc(90px * var(--scale));
+      --footer-h: calc(110px * var(--scale));
+    }
+
+    html,body{
+      height:100%; margin:0;
+      display:flex; align-items:center; justify-content:center;
+      background:#0b0c0e; color:var(--on-dark);
+      font-family: var(--font-ui);
+      font-size: calc(18px * var(--scale));
+    }
+
+    /* เฟรม 1200×2000 */
+    .stage{
+      position:relative;
+      width:1200px; height:2000px; overflow:hidden;
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.65) 55%, rgba(0,0,0,.85)),
+        url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
+      box-shadow:0 40px 100px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,255,255,.06);
+    }
+
+    .scroll{
+      height:100%;
+      overflow-y:auto; -webkit-overflow-scrolling:touch;
+      overscroll-behavior: contain; scrollbar-width:none;
+    }
+    .scroll::-webkit-scrollbar{ display:none; }
+
+    /* Header */
+    header{
+      position: sticky; top:0; z-index:10;
+      height: var(--header-h);
+      display:flex; align-items:center; gap: calc(16px * var(--scale));
+      padding: 0 calc(24px * var(--scale));
+      background: rgba(0,0,0,.6);
+      backdrop-filter: blur(6px);
+      border-bottom:1px solid var(--border);
+    }
+    .back{
+      display:inline-grid; place-items:center;
+      width: calc(56px * var(--scale));
+      height: calc(56px * var(--scale));
+      border-radius: 14px;
+      text-decoration:none; color:#fff; font-size: calc(34px * var(--scale)); line-height:1;
+      background: rgba(0,0,0,.55);
+      border:1px solid var(--border);
+      box-shadow:0 8px 18px rgba(0,0,0,.35), inset 0 0 0 1px rgba(255,255,255,.05);
+    }
+    .title{
+      font-weight:800; letter-spacing:.2px;
+      font-size: calc(30px * var(--scale));
+      text-shadow:0 3px 10px rgba(0,0,0,.5);
+    }
+    .chip{
+      margin-left:auto;
+      padding: calc(8px * var(--scale)) calc(14px * var(--scale));
+      border-radius:999px; border:1px solid var(--border);
+      background: rgba(0,0,0,.45); color:#fff; font-weight:800;
+      font-size: calc(16px * var(--scale));
+    }
+    .chip--done{ background: rgba(34,197,94,.20); color:#D1FAE5; border-color: rgba(34,197,94,.40); }
+
+    /* Meta */
+    .meta{
+      padding: calc(10px * var(--scale)) calc(24px * var(--scale));
+      color: var(--ink); font-size: calc(18px * var(--scale));
+    }
+
+    /* รายการอาหาร */
+    #items{ padding: 0 calc(18px * var(--scale)) calc(160px * var(--scale)); display:flex; flex-direction:column; gap: calc(14px * var(--scale)); }
+
+    .item{
+      display:grid; grid-template-columns: auto 1fr auto; align-items:center;
+      gap: calc(14px * var(--scale));
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.04));
+      border:1px solid var(--border); border-radius: var(--radius-md);
+      padding: calc(14px * var(--scale));
+      box-shadow:0 18px 36px rgba(0,0,0,.35);
+    }
+    .thumb{
+      width: calc(92px * var(--scale)); height: calc(92px * var(--scale));
+      border-radius: calc(14px * var(--scale));
+      object-fit: cover; background:#222; border:1px solid rgba(255,255,255,.08);
+    }
+    .name{ font-weight:800; font-size: calc(22px * var(--scale)); }
+    .opt{ color:#d8dde5; font-size: calc(16px * var(--scale)); margin-top: 4px; }
+    .qty{
+      padding: calc(8px * var(--scale)) calc(14px * var(--scale));
+      border-radius:999px; font-weight:900;
+      background: rgba(0,0,0,.45); border:1px solid var(--border);
+      font-size: calc(18px * var(--scale));
+    }
+
+    /* Footer */
+    .footer{
+      position: sticky; bottom:0; z-index:10;
+      height: var(--footer-h);
+      display:flex; align-items:center; justify-content:center;
+      padding: calc(14px * var(--scale));
+      background: linear-gradient(0deg, rgba(0,0,0,.75), rgba(0,0,0,0));
+      border-top:1px solid var(--border);
+      backdrop-filter: blur(4px);
+    }
+    .btn{
+      width: min(520px, 92%);
+      height: calc(64px * var(--scale));
+      border:none; border-radius: calc(18px * var(--scale));
+      color:#fff; font-weight:900; letter-spacing:.4px;
+      font-size: calc(22px * var(--scale));
+      cursor:pointer;
+      background:
+        radial-gradient(160px 110px at 50% 0%, rgba(255,255,255,.18), rgba(255,255,255,0) 70%),
+        linear-gradient(180deg, var(--brand-1), var(--brand-2));
+      border:1px solid var(--border);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 16px 34px rgba(0,0,0,.45);
+      transition: transform .08s ease, filter .18s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); filter: saturate(1.05); }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="scroll">
+      <header>
+        <a href="/kitchen" class="back" aria-label="back">‹</a>
+        <div class="title" id="title">Order #<%= orderId %></div>
+        <!-- สถานะจะแทรกคลาส chip--done ผ่าน JS ตามจริง -->
+        <div class="chip" id="statusChip">กำลังโหลด…</div>
+      </header>
+
+      <div class="meta" id="meta">กำลังโหลด…</div>
+      <div id="items"></div>
+
+      <div class="footer" id="footer">
+        <button class="btn" id="btn-done">ทำเสร็จแล้ว</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const orderId  = "<%= orderId %>";
+    const itemsEl  = document.getElementById('items');
+    const metaEl   = document.getElementById('meta');
+    const footer   = document.getElementById('footer');
+    const btnDone  = document.getElementById('btn-done');
+    const chip     = document.getElementById('statusChip');
+
+    async function load(){
+      const res  = await fetch('/api/kitchen/order/' + orderId);
+      const rows = await res.json();
+
+      if(!rows.length){
+        metaEl.textContent = 'ไม่พบออเดอร์นี้';
+        chip.textContent   = 'ไม่พบ';
+        footer.style.display = 'none';
+        return;
+      }
+
+      const head = rows[0];
+      const type = head.order_type || 'ไม่ระบุ';
+      metaEl.textContent = `#${orderId} • ${type} • สถานะ: ${head.status}`;
+      chip.textContent   = head.status === 'DONE' ? 'เสร็จสิ้น' : 'กำลังปรุง';
+      chip.classList.toggle('chip--done', head.status === 'DONE');
+
+      itemsEl.innerHTML = rows.map(it=>{
+        const name = it.item_name_th || it.item_name_en || 'เมนู';
+        const img  = (it.item_name_en && it.category_id != null)
+                      ? `/img/menu/${it.category_id}/${it.item_name_en}.png`
+                      : '/img/placeholder.png';
+        const opt  = it.options_text ? `<div class="opt">${it.options_text}</div>` : '';
+        return `
+          <div class="item">
+            <img class="thumb" src="${img}" alt="">
+            <div>
+              <div class="name">${name}</div>
+              ${opt}
+            </div>
+            <div class="qty">× ${it.quantity}</div>
+          </div>
+        `;
+      }).join('');
+
+      // ถ้า DONE แล้ว ไม่ต้องให้กดซ้ำ
+      footer.style.display = head.status === 'DONE' ? 'none' : 'flex';
+    }
+
+    btnDone.onclick = async () => {
+      let r = await fetch('/api/kitchen/orders/' + orderId + '/done', { method: 'PATCH' });
+      if(!r.ok) r = await fetch('/api/kitchen/orders/' + orderId + '/done', { method: 'POST' });
+      if(r.ok) location.href = '/kitchen';
+      else alert('อัปเดตไม่สำเร็จ');
+    };
+
+    load();
+  </script>
+</body>
+</html>

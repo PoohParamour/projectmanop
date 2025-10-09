@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1200, height=2000, initial-scale=1.0" />
+  <title>
+    <%= lang==="th" ? "ชำระเงิน" : "Payment" %>
+  </title>
+
+  <!-- ใช้ฟอนต์เดียวกับทั้งโปรเจกต์ ถ้ากำหนดไว้ที่ layout แล้ว ตัดบรรทัดนี้ออกได้ -->
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --font-ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", sans-serif;
+      --ink: #e5e7eb;
+      --on-dark: #fff;
+      --brand-1: #f0a24e;
+      --brand-2: #d88734;
+      --bg-1: #0b0c0e;
+      --panel: rgba(255, 255, 255, .06);
+      --glass: rgba(255, 255, 255, .06);
+      --ok: #2ecc71;
+      --err: #ef4444;
+      --radius-lg: 18px;
+      --radius-xl: 26px;
+      --qr-size: 320px;
+      --back-size: 72px;
+      --back-font: 60px;
+      --back-radius: 18px;
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #0b0c0e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--on-dark);
+      font-family: var(--font-ui);
+    }
+
+    /* เฟรมหลัก 1200x2000 */
+    .stage {
+      position: relative;
+      width: 1200px;
+      height: 2000px;
+      overflow: hidden;
+      border-radius: 18px;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
+        url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .06);
+      display: grid;
+      grid-template-rows: 96px 1fr 140px;
+    }
+
+    /* แถบบน */
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 28px;
+    }
+
+    .back {
+      width: var(--back-size);
+      height: var(--back-size);
+      border-radius: var(--back-radius);
+      font-size: var(--back-font);
+      font-weight: 900;
+      /* ให้สัญลักษณ์ × หนาขึ้น */
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      -webkit-tap-highlight-color: transparent;
+      color: black;
+      /* พื้นหลัง/เงาให้โดดขึ้นมาหน่อย */
+      background: rgba(0, 0, 0, .55);
+      border: 1px solid rgba(255, 255, 255, .18);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(255, 255, 255, .05);
+      transition: transform .08s ease, filter .18s ease;
+    }
+
+    .back,
+    .back:hover,
+    .back:focus,
+    .back:active,
+    .back:visited {
+      text-decoration: none !important;
+      -webkit-text-decoration: none !important;
+      text-decoration-thickness: 0 !important;
+    }
+
+
+
+    .title {
+      font-size: 38px;
+      font-weight: 800;
+      letter-spacing: .2px;
+      text-shadow: 0 3px 12px rgba(0, 0, 0, .5);
+    }
+
+    /* เนื้อหา */
+    .content {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    /* การ์ดชำระเงิน */
+    .pay-card {
+      width: min(920px, 100%);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02));
+      border: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+      padding: 28px;
+      display: grid;
+      gap: 22px;
+      font-size: 28px;
+    }
+
+    .amount {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      padding: 14px 18px;
+      border-radius: 16px;
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .amount label {
+      font-weight: 600;
+      opacity: .9;
+    }
+
+    .amount .value {
+      font-size: 48px;
+      font-weight: 800;
+    }
+
+    .qr-wrap {
+      display: grid;
+      grid-template-columns: var(--qr-size) 1fr;
+      /* คอลัมน์ซ้ายคือ QR */
+      gap: 40px;
+      align-items: center;
+      font-size: 30px;
+    }
+
+    .qr-box {
+      width: var(--qr-size);
+      aspect-ratio: 1 / 1;
+      /* คงสัดส่วนสี่เหลี่ยมจัตุรัส */
+      border-radius: 20px;
+      padding: 12px;
+      /* เผื่อขอบขาวให้สแกนง่าย */
+      overflow: hidden;
+      background: #fff;
+      /* ให้ตัดพื้นหลังเข้ม */
+      box-shadow: 0 12px 28px rgba(0, 0, 0, .35);
+      border: 1px solid rgba(0, 0, 0, .06);
+    }
+
+    .qr-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hint {
+      font-size: 34px;
+      opacity: .9;
+      line-height: 1.5;
+    }
+
+    .pill {
+      align-self: start;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--brand-1), var(--brand-2));
+      border: 1px solid rgba(255, 255, 255, .14);
+      font-weight: 800;
+      letter-spacing: .3px;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 10px 24px rgba(0, 0, 0, .35);
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .timer {
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      min-width: 220px;
+      height: 64px;
+      border-radius: 18px;
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: .5px;
+      text-decoration: none;
+      display: inline-grid;
+      place-items: center;
+      border: 0;
+      cursor: pointer;
+      background: radial-gradient(120px 90px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
+        linear-gradient(180deg, var(--brand-1), var(--brand-2));
+      border: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), 0 16px 34px rgba(0, 0, 0, .45);
+      transition: transform .08s ease, filter .18s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      filter: saturate(1.05);
+    }
+
+    /* ปุ่มขนาดใหญ่เฉพาะการยืนยันการชำระ */
+    .btn--lg {
+      font-family: var(--font-ui);
+      font-size: 32px;
+      /* <- ปรับตรงนี้ได้เลย */
+      height: 72px;
+      /* ให้สัดส่วนดูเต็มขึ้น */
+      min-width: 260px;
+      border-radius: 20px;
+      line-height: 1;
+      /* ให้ตัวหนังสืออยู่กลางสวย */
+    }
+
+
+    /* Success */
+    .success-card {
+      width: min(760px, 92%);
+      border-radius: 26px;
+      padding: 34px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, .08), rgba(255, 255, 255, .02));
+      border: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .45);
+      display: grid;
+      gap: 18px;
+      place-items: center;
+      text-align: center;
+    }
+
+    .check {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: rgba(46, 204, 113, .18);
+      border: 1px solid rgba(255, 255, 255, .12);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .45), inset 0 0 0 1px rgba(255, 255, 255, .08);
+      color: var(--ok);
+      font-size: 64px;
+      font-weight: 900;
+    }
+
+    .big {
+      font-size: 36px;
+      font-weight: 900;
+    }
+
+    .order-id {
+      padding: 10px 18px;
+      border-radius: 14px;
+      font-weight: 800;
+      background: rgba(0, 0, 0, .35);
+      border: 1px solid rgba(255, 255, 255, .12);
+      letter-spacing: .5px;
+    }
+
+    /* แถบล่าง (เว้นที่ถ้าต้องใส่ปุ่มเพิ่มทีหลัง) */
+    .bottom-space {
+      height: 1px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="stage">
+    <header class="topbar">
+      <a href="/main" class="back" aria-label="กลับ">×</a>
+      <div class="title">
+        <%= lang==="th" ? "ชำระเงิน" : "Payment" %>
+      </div>
+    </header>
+
+    <section class="content">
+      <% if (!paid) { %>
+        <article class="pay-card">
+          <div class="amount">
+            <label>
+              <%= lang==="th" ? "จำนวนเงินที่ต้องชำระ" : "Amount due" %>
+            </label>
+            <div class="value">฿ <%= amount %>
+            </div>
+          </div>
+
+          <div class="qr-wrap">
+            <div class="qr-box">
+              <img src="<%= qrCodeUrl %>" alt="QR Code">
+            </div>
+
+            <div>
+              <div class="pill">
+                <span>
+                  <%= lang==="th" ? "โปรดชำระภายใน" : "Pay within" %>
+                </span>
+                <span class="timer" id="countdown">05:00</span>
+              </div>
+              <p class="hint" style="margin-top:16px;">
+                <%= lang==="th"
+                  ? "สแกน QR ผ่านแอปธนาคารของคุณเพื่อชำระเงิน ระบบจะยืนยันอัตโนมัติภายหลัง หรือกดปุ่มยืนยันเมื่อชำระเสร็จ"
+                  : "Scan the QR with your banking app. The system will confirm shortly, or press Confirm after payment."
+                  %>
+              </p>
+            </div>
+          </div>
+
+          <div class="actions">
+            <form action="/checkout" method="post">
+              <input type="hidden" name="redirect" value="/payment/success">
+              <button type="submit" class="btn btn--lg">
+                <%= lang==="th" ? "ยืนยันการชำระเงิน" : "Confirm" %>
+              </button>
+            </form>
+          </div>
+        </article>
+        <% } else { %>
+          <article class="success-card">
+            <div class="check">✔</div>
+            <div class="big">
+              <%= lang==="th" ? "ชำระเงินเรียบร้อย" : "Payment successful" %>
+            </div>
+            <div style="font-size: 25px;">
+              <%= lang==="th" ? "เลขออเดอร์ของคุณ" : "Your order number" %>
+            </div>
+            <div class="order-id" style="font-size: 28px;">
+              <%= orderId %>
+            </div>
+            <p class="hint">
+              <%= lang==="th" ? "ขอบคุณที่ใช้บริการ กรุณารอเรียกคิวจากพนักงาน"
+                : "Thanks for your order. Please wait for your pickup/serve." %>
+            </p>
+            <a class="btn btn--lg" href="/">
+              <%= lang==="th" ? "กลับหน้าแรก" : "Back to home" %>
+            </a>
+          </article>
+          <% } %>
+    </section>
+
+    <div class="bottom-space"></div>
+  </main>
+
+  <script>
+    // นับถอยหลัง 5 นาที เมื่ออยู่หน้า Payment (ยังไม่จ่าย)
+    (function () {
+      const el = document.getElementById('countdown');
+      if (!el) return;
+      let timeLeft = 300; // 5 นาที
+      const tick = () => {
+        const m = Math.floor(timeLeft / 60);
+        const s = timeLeft % 60;
+        el.textContent = m + ":" + (s < 10 ? "0" + s : s);
+        timeLeft--;
+        if (timeLeft < 0) {
+          el.textContent = "<%= lang==='th' ? 'หมดเวลา' : 'Expired' %>";
+          clearInterval(t);
+        }
+      };
+      tick();
+      const t = setInterval(tick, 1000);
+    })();
+  </script>
+</body>
+
+</html>

@@ -5,15 +5,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=1200, height=2000, initial-scale=1.0" />
   <title>Home</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
   <style>
     :root {
       --text: #fff;
       --orange: #d88734;
-      /* พื้นปุ่ม */
       --orange-2: #f0a24e;
-      /* ไฮไลต์ปุ่ม */
       --orange-3: #b56b22;
-      /* เงาปุ่ม */
+      --font-ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
     }
 
     html,
@@ -24,7 +26,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
+      font-family: system-ui, var(--font-ui);
       color: var(--text);
     }
 
@@ -105,7 +107,7 @@
     /* ข้อความ "สั่งอาหารได้ที่นี่" */
     .tagline {
       position: absolute;
-      top: 1320px;
+      top: 1350px;
       left: 0;
       right: 0;
       text-align: center;
@@ -163,7 +165,7 @@
 
     .icon {
       width: 190px;
-      height: 180px; 
+      height: 180px;
       filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35));
     }
 
@@ -183,8 +185,13 @@
       pointer-events: none;
     }
 
-    .action--sharp-tr { border-radius: 100px 10px 100px 100px; }
-    .action--sharp-bl { border-radius: 100px 80px 100px 10px; }
+    .action--sharp-tr {
+      border-radius: 100px 10px 100px 100px;
+    }
+
+    .action--sharp-bl {
+      border-radius: 100px 80px 100px 10px;
+    }
   </style>
 </head>
 
@@ -193,12 +200,12 @@
     <!-- มุมขวาบน -->
     <div class="lang">
       <div class="flags">
-        <a href="/thai" class="flag-btn" aria-label="ภาษาไทย">
+        <a href="/lang/th" class="flag-btn" aria-label="ภาษาไทย">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/8/85/Flag_of_Thailand_%28proposed_shade_of_colours%29.png"
             alt="TH">
         </a>
-        <a href="/eng" class="flag-btn" aria-label="English">
+        <a href="/lang/en" class="flag-btn" aria-label="English">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/512px-Flag_of_the_United_Kingdom_%283-5%29.svg.png"
             alt="EN">
@@ -212,19 +219,25 @@
     </div>
 
     <!-- ข้อความ -->
-    <div class="tagline">สั่งอาหารได้ที่นี่</div>
+    <div class="tagline">
+      <%= lang==="th" ? "สั่งอาหารได้ที่นี่" : "Order your food here" %>
+    </div>
 
     <!-- ปุ่มเลือก -->
     <div class="actions">
-      <a class="action action--sharp-bl" href="/main" aria-label="ทานที่ร้าน">
+      <a class="action action--sharp-bl" href="/order-type?order_type=DINE_IN" aria-label="ทานที่ร้าน">
         <img src="/img/firstpage/diein.png" alt="dine-in" class="icon">
-        <span>ทานที่ร้าน</span>
+        <span>
+          <%= lang==="th" ? "ทานที่ร้าน" : "Dine In" %>
+        </span>
       </a>
 
-      <a class="action action--sharp-tr" href="/home" aria-label="ทานที่บ้าน">
+      <a class="action action--sharp-tr" href="/order-type?order_type=TAKEAWAY" aria-label="ทานที่บ้าน">
         <img src="/img/firstpage/home.png" alt="home" class="icon">
-        <span>ทานที่บ้าน</span>
-      </a>  
+        <span>
+          <%= lang==="th" ? "ทานที่บ้าน" : "Take Home" %>
+        </span>
+      </a>
     </div>
 
     <div aria-hidden="true"></div>

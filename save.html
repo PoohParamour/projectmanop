@@ -412,7 +412,6 @@
         <% } %>
 
           <form action="/add-to-cart" method="POST" id="addForm">
-            
             <input type="hidden" name="menu_item_id" value="<%= item.menu_item_id %>">
             <input type="hidden" name="quantity" id="qty" value="1">
 
@@ -442,7 +441,7 @@
                       <input type="<%= group.max_select>1 ? 'checkbox' : 'radio' %>"
                         name="options_<%= group.option_group_id %>[]"
                         value="<%= opt.option_value_id %>|<%= opt.extra_price %>"
-                        data-extra="<%= Number(opt.extra_price) %>" onchange="handleOptionChange(event)" />
+                        data-extra="<%= Number(opt.extra_price) %>" onchange="updateTotal()" />
                       <span class="box"></span>
                       <span class="name">
                         <%= opt.translated_name || opt.name %>
@@ -484,61 +483,15 @@
   </main>
 </body>
 <script>
-    const BASE_PRICE = parseFloat("<%= item.base_price %>");
-
-    function toggleGroup(head) {
-      head.closest('.group').classList.toggle('is-open');
-    }
-
-    function changeQty(change) {
-      const qtyInput = document.getElementById("qty");
-      const qtyDisplay = document.getElementById("qtyDisplay");
-      let current = parseInt(qtyInput.value);
-      let next = current + change;
-      if (next < 1) next = 1;
-      qtyInput.value = next;
-      qtyDisplay.textContent = next;
-      updateTotal();
-    }
-
-    function handleOptionChange(event) {
-  const input = event.target;
-  const group = input.closest('.group');
-
-  // ✅ ตรวจว่าชื่อกลุ่มมีคำว่า "ซอส" หรือ "sauce"
-  const groupName = group.querySelector("h3")?.innerText || "";
-  const isSauce = /ซอส|sauce/i.test(groupName);
-
-  // ✅ ถ้าเป็นซอส → จำกัดเลือกได้สูงสุด 2, ถ้าไม่ใช่ → ใช้ค่า max เดิม
-  const max = isSauce ? 2 : (parseInt(group.dataset.max) || 1);
-
-  const boxes = group.querySelectorAll('input[type="checkbox"]');
-  const checked = Array.from(boxes).filter(b => b.checked);
-
-  // ✅ ถ้าเลือกเกิน ให้ยกเลิกอันแรกที่เลือกไว้ก่อนหน้า
-  if (checked.length > max) {
-    checked[0].checked = false;
+  function changeQty(change) {
+    let qtyInput = document.getElementById("qty");
+    let qtyDisplay = document.getElementById("qtyDisplay");
+    let current = parseInt(qtyInput.value);
+    let next = current + change;
+    if (next < 1) next = 1;
+    qtyInput.value = next;
+    qtyDisplay.textContent = next;
   }
-
-  updateTotal();
-}
-
-    function updateTotal() {
-      let extra = 0;
-      document.querySelectorAll('.values input:checked').forEach(i => {
-        extra += Number(i.dataset.extra || 0);
-      });
-      const qty = parseInt(document.getElementById('qty').value) || 1;
-      const total = (BASE_PRICE + extra) * qty;
-      document.getElementById('totalText').textContent = '฿ ' + total.toFixed(0);
-    }
-
-    // ✅ ซ่อนราคาที่เป็น 0 (฿0)
-    document.addEventListener('DOMContentLoaded', () => {
-      document.querySelectorAll('.opt .extra').forEach(span => {
-        if (span.textContent.trim() === '฿0') span.style.display = 'none';
-      });
-    });
-  </script>
+</script>
 
 </html>

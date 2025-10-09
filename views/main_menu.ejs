@@ -5,12 +5,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=1200, height=2000, initial-scale=1.0" />
     <title>Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
 
     <style>
         :root {
             --text: #fff;
+            --ink: #e5e7eb;
             --brown: #7b5237;
-            /* สีน้ำตาลกระดาน */
+            /* กระดาน */
             --brown-2: #6a452d;
             --chip-gray: #e7e0d6;
             --chip-text: #2a2018;
@@ -19,6 +24,11 @@
             --glass: rgba(255, 255, 255, .06);
             --header-h: 210px;
             --footer-h: 230px;
+            --radius-lg: 18px;
+            --radius-xl: 25px;
+            --card-bg: #ffffff;
+            --card-text: #111111;
+            --font-ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
         }
 
         html,
@@ -26,55 +36,24 @@
             height: 100%;
             margin: 0;
             background: #0b0c0e;
-            font-family: system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
+            font-family: var(--font-ui);
             color: var(--text);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
-        /* เฟรม 1200x2000 และพื้นหลังเหมือนหน้า Home */
         .stage {
             position: relative;
-            width: 1200px;
-            height: 2000px;
+            width: min(1200px, 100vw);
+            height: min(2000px, 100vh);
             overflow: hidden;
-            border-radius: 18px;
-            background:
-                linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
                 url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
             box-shadow: 0 40px 100px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .06);
         }
 
-        /* header/footer แบบ glass */
-        .header-shell,
-        .footer-shell {
-            position: fixed;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-        .header-shell {
-            top: 0;
-            height: var(--header-h);
-            background: linear-gradient(to bottom, rgba(0, 0, 0, .35), rgba(0, 0, 0, .05));
-            border-bottom: 1px solid var(--glass);
-        }
-
-        .footer-shell {
-            bottom: 0;
-            height: var(--footer-h);
-            background: linear-gradient(to top, rgba(0, 0, 0, .45), rgba(0, 0, 0, .05));
-            border-top: 1px solid var(--glass);
-        }
-
-        /* โซนเลื่อน */
         .scroll-area {
             position: relative;
             height: 100%;
@@ -84,71 +63,52 @@
         .container {
             height: 100%;
             overflow-y: auto;
-            padding: 18px 24px 24px;
-            padding-top: calc(var(--header-h) + 6px);
-            padding-bottom: calc(var(--footer-h) + 10px);
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            scrollbar-width: none;
+            box-sizing: border-box;
+            padding: 0 0 24px 0;
         }
 
-        /* ===== กระดานสีน้ำตาลที่รวม chips + grid ===== */
-        .board {
-            max-width: 860px;
-            margin: 0 auto;
-            background: linear-gradient(180deg, var(--brown), var(--brown-2));
-            border-radius: 18px;
-            padding: 14px 14px 18px;
-            box-shadow: 0 14px 32px rgba(0, 0, 0, .35), inset 0 0 0 1px rgba(255, 255, 255, .04);
+        .container::-webkit-scrollbar {
+            width: 0;
+            height: 0;
         }
 
-        /* Chips บนกระดาน */
-        .menu-topbar {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 12px;
+        .container::-webkit-scrollbar-thumb,
+        .container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .container::-webkit-scrollbar {
+            display: none;
         }
 
         .chip {
-            appearance: none;
-            border: 0;
-            cursor: pointer;
+            font-size: 18px;
             font-weight: 800;
-            padding: 8px 16px;
+            line-height: 1.15;
+            white-space: nowrap;
+            padding: 10px 16px;
             border-radius: 999px;
-            letter-spacing: .2px;
+            letter-spacing: .15px;
             color: var(--chip-text);
             background: var(--chip-gray);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, .18);
-            transition: transform .08s ease, filter .18s ease, box-shadow .18s ease;
+            transition: transform .08s ease, box-shadow .18s ease, filter .18s ease;
+            cursor: pointer;
+            user-select: none;
         }
 
         .chip:hover {
             transform: translateY(-1px);
         }
 
-        .chip.is-active {
-            color: #fff;
-            background:
-                radial-gradient(120px 90px at 50% 0%, rgba(255, 255, 255, .16), rgba(255, 255, 255, 0) 70%),
-                linear-gradient(180deg, var(--orange-2), var(--orange));
-            box-shadow: 0 10px 20px rgba(0, 0, 0, .28), 0 0 26px rgba(208, 135, 52, .35);
-        }
-
-        /* Grid 2 คอลัมน์เหมือนภาพ */
+        /* ----- Grid ----- */
         .menu-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        /* การ์ดพื้นดำโค้งมน + เงา + noise */
-        .menu-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 16px;
-            background: #121212;
-            box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
-            border: 1px solid rgba(255, 255, 255, .04);
-            transition: transform .12s ease, box-shadow .18s ease;
+            gap: 28px;
+            margin: 0 12px 12px;
         }
 
         .menu-card:hover {
@@ -156,34 +116,21 @@
             box-shadow: 0 18px 36px rgba(0, 0, 0, .45);
         }
 
-        .menu-card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
-            opacity: .12;
-            mix-blend-mode: overlay;
-        }
 
-        /* รูป + เนื้อหาในการ์ด */
         .menu-media {
             width: 100%;
+            height: auto;
             aspect-ratio: 16/11;
             object-fit: cover;
             display: block;
         }
 
+
         .menu-body {
-            padding: 10px 12px 12px;
+            padding: 12px 14px 14px;
         }
 
-        .menu-title {
-            margin: 6px 0 8px;
-            font-size: 18px;
-            font-weight: 900;
-            text-align: center;
-        }
+
 
         .menu-meta {
             display: flex;
@@ -192,14 +139,16 @@
         }
 
         .price {
-            font-size: 16px;
+            font-size: 30px;
             font-weight: 900;
+            font-family: var(--font-ui);
         }
 
-        /* ปุ่ม + วงกลมส้ม */
+
+        /* Add button */
         .add-btn {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             display: grid;
             place-items: center;
@@ -208,72 +157,491 @@
             font-size: 22px;
             font-weight: 900;
             line-height: 0;
-            background:
-                radial-gradient(80px 60px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
+            background: radial-gradient(80px 60px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
                 linear-gradient(180deg, var(--orange-2), var(--orange));
             border: 1px solid rgba(255, 255, 255, .08);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06),
-                0 6px 14px rgba(0, 0, 0, .25);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 6px 14px rgba(0, 0, 0, .25);
             transition: transform .08s ease, filter .18s ease;
         }
+
 
         .add-btn:hover {
             transform: translateY(-1px);
             filter: saturate(1.06);
         }
 
-        /* (ถ้ามี bottom-nav ใน footer.ejs อยู่แล้ว สไตล์จะเกาะพื้นแก้วอยู่) */
+        .add-btn:focus-visible {
+            outline: 2px solid #fff;
+            outline-offset: 2px;
+        }
+
+        /* กล่องเลื่อนแนวนอนของแท็บ */
+        #chipViewport {
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            touch-action: pan-x;
+            overscroll-behavior-inline: contain;
+            scrollbar-width: none;
+            -webkit-mask-image: linear-gradient(to right, transparent 0, black 28px,
+                    black calc(100% - 28px), transparent 100%);
+            mask-image: linear-gradient(to right, transparent 0, black 28px,
+                    black calc(100% - 28px), transparent 100%);
+        }
+
+        #chipViewport::-webkit-scrollbar {
+            display: none;
+        }
+
+
+        #chipBar {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            padding: 0 8px;
+        }
+
+        #chipBar .chip {
+            flex: 0 0 auto;
+            white-space: nowrap;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #chipViewport.is-dragging {
+            cursor: grabbing;
+        }
+
+        #chipViewport {
+            cursor: grab;
+        }
+
+
+
+        @media (max-width: 1100px) {
+            :root {
+                --header-h: 160px;
+                --footer-h: 190px;
+            }
+
+            .menu-grid {
+                gap: 22px;
+            }
+        }
+
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+            }
+
+            .container {
+                scroll-behavior: auto;
+            }
+        }
+
+        .stage .sheet {
+            position: absolute;
+            inset: 0;
+            display: none;
+            z-index: 60;
+        }
+
+        .stage .sheet.is-open {
+            display: block;
+        }
+
+        .sheet .backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+        }
+
+        .sheet .panel {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            max-height: 72%;
+            background: #fff;
+            color: #111;
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            box-shadow: 0 -8px 28px rgba(0, 0, 0, .35);
+            transform: translateY(100%);
+            transition: transform .26s ease;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .sheet.is-open .panel {
+            transform: translateY(0);
+        }
+
+        .sheet .handle {
+            width: 42px;
+            height: 4px;
+            border-radius: 2px;
+            background: #d1d5db;
+            margin: 10px auto;
+        }
+
+        .sheet header {
+            font-weight: 900;
+            font-size: 50px;
+            padding: 6px 18px 10px;
+        }
+
+        .sheet .list a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            text-decoration: none;
+            color: black;
+            border-top: 1px solid #eee;
+            font-size: 45px;
+            font-weight: 400;
+        }
+
+        .sheet .list a:active {
+            background: #f6f7f9;
+        }
+
+        /* nav     */
+        :root {
+            --nav-h: 64px;
+            --nav-scale: 1.35;
+            --nav-base: 64;
+        }
+
+        .container {
+            /* กันเนื้อหาถูกทับด้วยบาร์ล่าง */
+            padding-bottom: calc(24px + var(--nav-base) * var(--nav-scale) * 1px + env(safe-area-inset-bottom));
+        }
+
+        .bottom-nav {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: calc(var(--nav-h) + env(safe-area-inset-bottom));
+            padding: 10px 20px calc(10px + env(safe-area-inset-bottom)) 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #3b281b;
+            /* สีน้ำตาลเข้มแบบตัวอย่าง */
+            color: #fff;
+            border-top: 1px solid rgba(255, 255, 255, .08);
+            box-shadow: 0 -8px 22px rgba(0, 0, 0, .35);
+            z-index: 40;
+        }
+
+        .bn-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 800;
+            letter-spacing: .3px;
+            -webkit-tap-highlight-color: transparent;
+            transition: filter .15s ease, transform .06s ease;
+        }
+
+        .bn-item:active {
+            transform: translateY(1px);
+        }
+
+        .bn-item.is-active {
+            filter: brightness(1.18);
+        }
+
+        .bn-ico {
+            width: 24px;
+            height: 24px;
+            display: block;
+        }
+
+        .bottom-nav {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 88px;
+            /* ใกล้เคียงรูปตัวอย่าง */
+            background: #4a2f1f;
+            /* น้ำตาลเข้ม */
+            color: #fff;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            /* ปุ่ม-เส้น-ปุ่ม */
+            align-items: center;
+            padding: 0 24px;
+            z-index: 40;
+            /* ต่ำกว่า sheet ที่ z=60 */
+            box-shadow: 0 -2px 0 rgba(0, 0, 0, .25);
+            /* เงาบาง ๆ ด้านบน */
+        }
+
+        .bottom-nav .nav-action {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+            font-weight: 800;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            font-size: 40px;
+            height: 100%;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .bottom-nav .nav-action svg {
+            width: 32px;
+            height: 32px;
+            /* ไอคอนใหญ่แบบในรูป */
+            display: block;
+        }
+
+        .bottom-nav .nav-divider {
+            width: 1px;
+            height: 38px;
+            background: rgba(255, 255, 255, .35);
+            /* เส้นแบ่งกลาง */
+            border-radius: 1px;
+        }
+
+        /* กด/โฮเวอร์ */
+        .bottom-nav .nav-action:active {
+            transform: translateY(1px);
+        }
+
+        .bottom-nav .nav-action:focus-visible {
+            outline: 2px solid rgba(255, 255, 255, .7);
+            outline-offset: 3px;
+        }
+
+        /* รองรับจอเล็ก */
+        @media (max-width: 900px) {
+            .bottom-nav {
+                height: 64px;
+                padding: 0 18px;
+            }
+
+            .bottom-nav .nav-action {
+                font-size: 18px;
+                gap: 12px;
+            }
+
+            .bottom-nav .nav-action svg {
+                width: 28px;
+                height: 28px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bottom-nav .nav-action {
+                transition: none;
+            }
+        }
+
+        :root {
+            --nav-text-size: 40px;
+        }
+
+        .bottom-nav .nav-action {
+            font-size: var(--nav-text-size);
+            line-height: 1;
+            gap: 0.6em;
+        }
+
+        .bottom-nav .nav-action svg {
+            width: 1em;
+            height: 1em;
+            display: block;
+            flex: 0 0 auto;
+        }
+
+        @media (max-width: 900px) {
+            .bottom-nav .nav-action {
+                font-size: 18px;
+            }
+
+            .bottom-nav .nav-action svg {
+                width: 1em;
+                height: 1em;
+            }
+        }
+
+        .chip,
+        .menu-title,
+        .bottom-nav .nav-action span {
+            font-family: var(--font-ui);
+            font-weight: 800;
+            letter-spacing: .15px;
+        }
+
+
     </style>
 </head>
 
 <body>
     <main class="stage">
-        <div class="header-shell"></div>
+        <!-- ซ่อนลิงก์ต้นฉบับไว้ใน header-shell -->
+        <div class="header-shell" hidden>
+            <a class="hs-link" href="/main">
+                <%= lang==="th" ? "ทั้งหมด" : "All" %>
+            </a>
+            <a class="hs-link" href="/orders">
+                <%= lang==="th" ? "คอมโบเซ็ต" : "Combo Set" %>
+            </a>
+            <a class="hs-link" href="/promotions">
+                <%= lang==="th" ? "ข้าว & พาสต้า" : "Rice & Pasta" %>
+            </a>
+            <a class="hs-link" href="/steak">
+                <%= lang==="th" ? "สเต็ก" : "Steak" %>
+            </a>
+            <a class="hs-link" href="/contact">
+                <%= lang==="th" ? "เบอร์เกอร์" : "Burgers" %>
+            </a>
+            <a class="hs-link" href="/contact">
+                <%= lang==="th" ? "ของทานเล่น" : "Appetizer" %>
+            </a>
+            <a class="hs-link" href="/contact">
+                <%= lang==="th" ? "เครื่องดื่ม" : "Drinks" %>
+            </a>
+        </div>
 
         <section class="scroll-area">
             <div class="container">
-                <!-- ถ้า menu.ejs ของคุณสร้าง chips+grid ตามคลาสด้านล่าง จะสวยทันที -->
-                <!-- ตัวอย่าง (เผื่ออ้างอิง): 
-          <div class="menu-topbar" id="chipBar">
-            <button class="chip is-active" data-cat="all">ทั้งหมด</button>
-            <button class="chip" data-cat="1">คอมโบเซ็ต</button>
-            ...
-          </div>
-          <div class="menu-grid" id="menuGrid">
-            <article class="menu-card" data-cat="1">
-              <img class="menu-media" src="/img/menu/1/xxx.png" alt="...">
-              <div class="menu-body">
-                <h3 class="menu-title">ชื่อเมนู</h3>
-                <div class="menu-meta">
-                  <div class="price">฿ 109</div>
-                  <a class="add-btn" href="/more/123">+</a>
-                </div>
-              </div>
-            </article>
-          </div>
-        -->
                 <%- include("menu") %>
             </div>
         </section>
+        <!-- nav -->
+        <nav class="bottom-nav" role="navigation" aria-label="Primary">
+            <a class="nav-action nav-home" href="/">
+                <!-- HOME icon -->
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M3 10.5L12 3l9 7.5" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M5 10v10h5v-6h4v6h5V10" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span style="font-family: var(--font-ui);"><%= lang==="th" ? "หน้าแรก" : "HOME" %></span>
+            </a>
 
-        <div class="footer-shell"></div>
+            <span class="nav-divider" aria-hidden="true"></span>
+
+            <a class="nav-action nav-cart" href="/cart">
+                <!-- CART icon -->
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M6 6h15l-1.5 8.5H8.5L7 3H3" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <circle cx="10" cy="20" r="1.6" fill="currentColor" />
+                    <circle cx="18" cy="20" r="1.6" fill="currentColor" />
+                </svg>
+                <span style="font-family: var(--font-ui);"><%= lang==="th" ? "ตะกร้า" : "CART" %></span>
+            </a>
+        </nav>
+
     </main>
-
-    <script>
-        // ฟิลเตอร์ตามหมวด (ต้องมี #chipBar และ #menuGrid)
-        (function () {
-            const chips = Array.from(document.querySelectorAll('#chipBar .chip'));
-            const cards = Array.from(document.querySelectorAll('#menuGrid .menu-card'));
-            if (!chips.length || !cards.length) return;
-
-            function activate(cat) {
-                chips.forEach(ch => ch.classList.toggle('is-active', ch.dataset.cat === cat));
-                cards.forEach(c => c.style.display = (cat === 'all' || c.dataset.cat === cat) ? '' : 'none');
-                document.querySelector('.container')?.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-            chips.forEach(chip => chip.addEventListener('click', () => activate(chip.dataset.cat)));
-        })();
-    </script>
 </body>
+<script>
+    (function () {
+        const BASE_PATH = '/main'; // เปลี่ยนได้ตาม route หลักของคุณ
+
+        const stage = document.querySelector('.stage');
+        const burgerBtn = document.querySelector('#menuSection .menu-topbar .tab-icon');
+        if (!stage || !burgerBtn) return;
+
+        // สร้างแผ่นเมนูหนึ่งครั้ง
+        const sheet = document.createElement('aside');
+        sheet.className = 'sheet';
+        sheet.innerHTML = `
+    <div class="backdrop" data-close></div>
+    <div class="panel" role="dialog" aria-modal="true" aria-label="เมนู">
+      <div class="handle"></div>
+      <header><%= lang==="th" ? "เมนู" : "Menu" %></header>
+      <nav class="list" id="sheetList"></nav>
+    </div>`;
+        stage.appendChild(sheet);
+
+        const list = sheet.querySelector('#sheetList');
+        const shell = document.querySelector('.header-shell');
+
+        function buildList() {
+            list.innerHTML = '';
+            // 1) ใช้ลิงก์จาก .header-shell ถ้ามี
+            const candidates = shell ? shell.querySelectorAll('a, button[data-href]') : [];
+            if (candidates && candidates.length) {
+                candidates.forEach(n => {
+                    const href = n.getAttribute('href') || n.dataset.href || '#';
+                    const label = (n.textContent || '').trim();
+                    const a = document.createElement('a');
+                    a.href = href; a.textContent = label;
+                    list.appendChild(a);
+                });
+                return;
+            }
+            // 2) ไม่มีก็ fallback: สร้างจากชิปหมวดหมู่ด้านบน
+            document.querySelectorAll('#chipBar .chip').forEach(ch => {
+                const cat = ch.dataset.cat || 'all';
+                const label = (ch.textContent || '').trim();
+                const a = document.createElement('a');
+                a.href = (cat === 'all') ? BASE_PATH : `${BASE_PATH}/${encodeURIComponent(cat)}`;
+                a.textContent = label;
+                list.appendChild(a);
+            });
+        }
+
+        function openSheet() {
+            buildList();
+            sheet.classList.add('is-open');
+        }
+        function closeSheet() {
+            sheet.classList.remove('is-open');
+        }
+
+        // เปิดด้วยปุ่ม 3 ขีด
+        burgerBtn.addEventListener('click', openSheet);
+
+        // ปิดเมื่อกดฉากหลัง/กด Esc
+        sheet.addEventListener('click', e => { if (e.target.hasAttribute('data-close')) closeSheet(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+        // แตะ/ลากลงเพื่อปิด (เบา ๆ)
+        (function addDragToClose() {
+            const panel = sheet.querySelector('.panel');
+            let down = false, sy = 0, start = 0;
+            panel.addEventListener('pointerdown', e => { down = true; sy = e.clientY; start = panel.scrollTop; });
+            panel.addEventListener('pointermove', e => {
+                if (!down) return;
+                const dy = e.clientY - sy;
+                // ปิดเฉพาะตอนเลื่อนอยู่บนสุดเท่านั้น
+                if (start === 0 && dy > 12) {
+                    sheet.style.setProperty('--tmp-ty', Math.min(dy, 160) + 'px');
+                    panel.style.transform = `translateY(calc( var(--tmp-ty, 0px) ))`;
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            panel.addEventListener('pointerup', () => {
+                down = false;
+                const ty = parseFloat((getComputedStyle(sheet).getPropertyValue('--tmp-ty') || '0').trim());
+                sheet.style.removeProperty('--tmp-ty');
+                panel.style.transform = '';
+                if (ty > 120) closeSheet();
+            });
+            panel.addEventListener('pointercancel', () => { down = false; panel.style.transform = ''; sheet.style.removeProperty('--tmp-ty'); });
+        })();
+    })();
+
+
+</script>
 
 </html>
