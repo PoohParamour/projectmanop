@@ -9,13 +9,11 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-
     <style>
         :root {
             --text: #fff;
             --ink: #e5e7eb;
             --brown: #7b5237;
-            /* กระดาน */
             --brown-2: #6a452d;
             --chip-gray: #e7e0d6;
             --chip-text: #2a2018;
@@ -47,7 +45,7 @@
             position: relative;
             width: min(1200px, 100vw);
             height: min(2000px, 100vh);
-            overflow: hidden;
+            overflow: visible;
             border-radius: var(--radius-lg);
             background: linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
                 url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
@@ -57,7 +55,7 @@
         .scroll-area {
             position: relative;
             height: 100%;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .container {
@@ -67,323 +65,28 @@
             overscroll-behavior: contain;
             scrollbar-width: none;
             box-sizing: border-box;
-            padding: 0 0 24px 0;
-        }
-
-        .container::-webkit-scrollbar {
-            width: 0;
-            height: 0;
-        }
-
-        .container::-webkit-scrollbar-thumb,
-        .container::-webkit-scrollbar-track {
-            background: transparent;
+            padding: 0 0 140px 0;
         }
 
         .container::-webkit-scrollbar {
             display: none;
         }
 
-        .chip {
-            font-size: 18px;
-            font-weight: 800;
-            line-height: 1.15;
-            white-space: nowrap;
-            padding: 10px 16px;
-            border-radius: 999px;
-            letter-spacing: .15px;
-            color: var(--chip-text);
-            background: var(--chip-gray);
-            transition: transform .08s ease, box-shadow .18s ease, filter .18s ease;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .chip:hover {
-            transform: translateY(-1px);
-        }
-
-        /* ----- Grid ----- */
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 28px;
-            margin: 0 12px 12px;
-        }
-
-        .menu-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 36px rgba(0, 0, 0, .45);
-        }
-
-
-        .menu-media {
-            width: 100%;
-            height: auto;
-            aspect-ratio: 16/11;
-            object-fit: cover;
-            display: block;
-        }
-
-
-        .menu-body {
-            padding: 12px 14px 14px;
-        }
-
-
-
-        .menu-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .price {
-            font-size: 30px;
-            font-weight: 900;
-            font-family: var(--font-ui);
-        }
-
-
-        /* Add button */
-        .add-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: grid;
-            place-items: center;
-            color: #fff;
-            text-decoration: none;
-            font-size: 22px;
-            font-weight: 900;
-            line-height: 0;
-            background: radial-gradient(80px 60px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
-                linear-gradient(180deg, var(--orange-2), var(--orange));
-            border: 1px solid rgba(255, 255, 255, .08);
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 6px 14px rgba(0, 0, 0, .25);
-            transition: transform .08s ease, filter .18s ease;
-        }
-
-
-        .add-btn:hover {
-            transform: translateY(-1px);
-            filter: saturate(1.06);
-        }
-
-        .add-btn:focus-visible {
-            outline: 2px solid #fff;
-            outline-offset: 2px;
-        }
-
-        /* กล่องเลื่อนแนวนอนของแท็บ */
-        #chipViewport {
-            overflow-x: auto;
-            overflow-y: hidden;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-            touch-action: pan-x;
-            overscroll-behavior-inline: contain;
-            scrollbar-width: none;
-            -webkit-mask-image: linear-gradient(to right, transparent 0, black 28px,
-                    black calc(100% - 28px), transparent 100%);
-            mask-image: linear-gradient(to right, transparent 0, black 28px,
-                    black calc(100% - 28px), transparent 100%);
-        }
-
-        #chipViewport::-webkit-scrollbar {
-            display: none;
-        }
-
-
-        #chipBar {
-            display: flex;
-            align-items: center;
-            gap: 28px;
-            padding: 0 8px;
-        }
-
-        #chipBar .chip {
-            flex: 0 0 auto;
-            white-space: nowrap;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        #chipViewport.is-dragging {
-            cursor: grabbing;
-        }
-
-        #chipViewport {
-            cursor: grab;
-        }
-
-
-
-        @media (max-width: 1100px) {
-            :root {
-                --header-h: 160px;
-                --footer-h: 190px;
-            }
-
-            .menu-grid {
-                gap: 22px;
-            }
-        }
-
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                transition: none !important;
-            }
-
-            .container {
-                scroll-behavior: auto;
-            }
-        }
-
-        .stage .sheet {
-            position: absolute;
-            inset: 0;
-            display: none;
-            z-index: 60;
-        }
-
-        .stage .sheet.is-open {
-            display: block;
-        }
-
-        .sheet .backdrop {
-            position: absolute;
-            inset: 0;
-            background: rgba(0, 0, 0, .45);
-        }
-
-        .sheet .panel {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            max-height: 72%;
-            background: #fff;
-            color: #111;
-            border-top-left-radius: 16px;
-            border-top-right-radius: 16px;
-            box-shadow: 0 -8px 28px rgba(0, 0, 0, .35);
-            transform: translateY(100%);
-            transition: transform .26s ease;
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .sheet.is-open .panel {
-            transform: translateY(0);
-        }
-
-        .sheet .handle {
-            width: 42px;
-            height: 4px;
-            border-radius: 2px;
-            background: #d1d5db;
-            margin: 10px auto;
-        }
-
-        .sheet header {
-            font-weight: 900;
-            font-size: 50px;
-            padding: 6px 18px 10px;
-        }
-
-        .sheet .list a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 20px;
-            text-decoration: none;
-            color: black;
-            border-top: 1px solid #eee;
-            font-size: 45px;
-            font-weight: 400;
-        }
-
-        .sheet .list a:active {
-            background: #f6f7f9;
-        }
-
-        /* nav     */
-        :root {
-            --nav-h: 64px;
-            --nav-scale: 1.35;
-            --nav-base: 64;
-        }
-
-        .container {
-            /* กันเนื้อหาถูกทับด้วยบาร์ล่าง */
-            padding-bottom: calc(24px + var(--nav-base) * var(--nav-scale) * 1px + env(safe-area-inset-bottom));
-        }
-
-        .bottom-nav {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            height: calc(var(--nav-h) + env(safe-area-inset-bottom));
-            padding: 10px 20px calc(10px + env(safe-area-inset-bottom)) 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #3b281b;
-            /* สีน้ำตาลเข้มแบบตัวอย่าง */
-            color: #fff;
-            border-top: 1px solid rgba(255, 255, 255, .08);
-            box-shadow: 0 -8px 22px rgba(0, 0, 0, .35);
-            z-index: 40;
-        }
-
-        .bn-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            text-decoration: none;
-            font-weight: 800;
-            letter-spacing: .3px;
-            -webkit-tap-highlight-color: transparent;
-            transition: filter .15s ease, transform .06s ease;
-        }
-
-        .bn-item:active {
-            transform: translateY(1px);
-        }
-
-        .bn-item.is-active {
-            filter: brightness(1.18);
-        }
-
-        .bn-ico {
-            width: 24px;
-            height: 24px;
-            display: block;
-        }
-
+        /* NAVIGATION BAR */
         .bottom-nav {
             position: absolute;
             left: 0;
             right: 0;
             bottom: 0;
             height: 88px;
-            /* ใกล้เคียงรูปตัวอย่าง */
             background: #4a2f1f;
-            /* น้ำตาลเข้ม */
             color: #fff;
             display: grid;
             grid-template-columns: 1fr auto 1fr;
-            /* ปุ่ม-เส้น-ปุ่ม */
             align-items: center;
             padding: 0 24px;
             z-index: 40;
-            /* ต่ำกว่า sheet ที่ z=60 */
             box-shadow: 0 -2px 0 rgba(0, 0, 0, .25);
-            /* เงาบาง ๆ ด้านบน */
         }
 
         .bottom-nav .nav-action {
@@ -394,18 +97,14 @@
             text-decoration: none;
             color: inherit;
             font-weight: 800;
-            letter-spacing: .5px;
             text-transform: uppercase;
             font-size: 40px;
             height: 100%;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
         }
 
         .bottom-nav .nav-action svg {
             width: 32px;
             height: 32px;
-            /* ไอคอนใหญ่แบบในรูป */
             display: block;
         }
 
@@ -413,30 +112,56 @@
             width: 1px;
             height: 38px;
             background: rgba(255, 255, 255, .35);
-            /* เส้นแบ่งกลาง */
             border-radius: 1px;
         }
 
-        /* กด/โฮเวอร์ */
-        .bottom-nav .nav-action:active {
-            transform: translateY(1px);
-        }
+        /* ==============================
+   🎯 Responsive สำหรับ iPad Gen 7–10
+   ============================== */
+        @media (max-width: 1024px) {
 
-        .bottom-nav .nav-action:focus-visible {
-            outline: 2px solid rgba(255, 255, 255, .7);
-            outline-offset: 3px;
-        }
+            html,
+            body {
+                overflow: hidden;
+                /* ❗️ล็อกไม่ให้ body ขยับ */
+                background: #000;
+            }
 
-        /* รองรับจอเล็ก */
-        @media (max-width: 900px) {
+            .stage {
+                width: 1200px;
+                /* ✅ ล็อกขนาดกรอบ stage */
+                height: 2000px;
+                margin: 0 auto;
+                transform: scale(0.85);
+                /* ✅ ย่อทั้ง stage ให้พอดี iPad */
+                transform-origin: top center;
+                border-radius: 18px;
+                box-shadow: none;
+            }
+
+            /* ✅ ให้เลื่อนเฉพาะเนื้อหาภายใน container */
+            .scroll-area {
+                height: 100%;
+                overflow: hidden;
+            }
+
+            .container {
+                height: 100%;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 180px;
+                /* เว้นพื้นที่ footer */
+            }
+
+            /* ปุ่ม nav ด้านล่าง */
             .bottom-nav {
-                height: 64px;
-                padding: 0 18px;
+                height: 80px;
+                font-size: 24px;
             }
 
             .bottom-nav .nav-action {
-                font-size: 18px;
-                gap: 12px;
+                font-size: 26px;
+                gap: 10px;
             }
 
             .bottom-nav .nav-action svg {
@@ -445,203 +170,64 @@
             }
         }
 
-        @media (prefers-reduced-motion: reduce) {
+        /* ==============================
+   🎯 ปรับสำหรับแนวนอน (Landscape)
+   ============================== */
+        @media (max-height: 850px) and (orientation: landscape) {
+            .stage {
+                transform: scale(0.75);
+                /* ย่อมากขึ้น */
+                transform-origin: top center;
+            }
+
+            .bottom-nav {
+                height: 70px;
+            }
+
             .bottom-nav .nav-action {
-                transition: none;
+                font-size: 22px;
             }
         }
-
-        :root {
-            --nav-text-size: 40px;
-        }
-
-        .bottom-nav .nav-action {
-            font-size: var(--nav-text-size);
-            line-height: 1;
-            gap: 0.6em;
-        }
-
-        .bottom-nav .nav-action svg {
-            width: 1em;
-            height: 1em;
-            display: block;
-            flex: 0 0 auto;
-        }
-
-        @media (max-width: 900px) {
-            .bottom-nav .nav-action {
-                font-size: 18px;
-            }
-
-            .bottom-nav .nav-action svg {
-                width: 1em;
-                height: 1em;
-            }
-        }
-
-        .chip,
-        .menu-title,
-        .bottom-nav .nav-action span {
-            font-family: var(--font-ui);
-            font-weight: 800;
-            letter-spacing: .15px;
-        }
-
-
     </style>
 </head>
 
 <body>
     <main class="stage">
-        <!-- ซ่อนลิงก์ต้นฉบับไว้ใน header-shell -->
-        <div class="header-shell" hidden>
-            <a class="hs-link" href="/main">
-                <%= lang==="th" ? "ทั้งหมด" : "All" %>
-            </a>
-            <a class="hs-link" href="/orders">
-                <%= lang==="th" ? "คอมโบเซ็ต" : "Combo Set" %>
-            </a>
-            <a class="hs-link" href="/promotions">
-                <%= lang==="th" ? "ข้าว & พาสต้า" : "Rice & Pasta" %>
-            </a>
-            <a class="hs-link" href="/steak">
-                <%= lang==="th" ? "สเต็ก" : "Steak" %>
-            </a>
-            <a class="hs-link" href="/contact">
-                <%= lang==="th" ? "เบอร์เกอร์" : "Burgers" %>
-            </a>
-            <a class="hs-link" href="/contact">
-                <%= lang==="th" ? "ของทานเล่น" : "Appetizer" %>
-            </a>
-            <a class="hs-link" href="/contact">
-                <%= lang==="th" ? "เครื่องดื่ม" : "Drinks" %>
-            </a>
-        </div>
-
         <section class="scroll-area">
             <div class="container">
                 <%- include("menu") %>
             </div>
         </section>
-        <!-- nav -->
+
+        <!-- bottom navigation -->
         <nav class="bottom-nav" role="navigation" aria-label="Primary">
             <a class="nav-action nav-home" href="/">
-                <!-- HOME icon -->
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M3 10.5L12 3l9 7.5" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" />
                     <path d="M5 10v10h5v-6h4v6h5V10" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
-                <span style="font-family: var(--font-ui);"><%= lang==="th" ? "หน้าแรก" : "HOME" %></span>
+                <span>
+                    <%= lang==="th" ? "หน้าแรก" : "HOME" %>
+                </span>
             </a>
 
             <span class="nav-divider" aria-hidden="true"></span>
 
             <a class="nav-action nav-cart" href="/cart">
-                <!-- CART icon -->
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M6 6h15l-1.5 8.5H8.5L7 3H3" fill="none" stroke="currentColor" stroke-width="2"
                         stroke-linecap="round" stroke-linejoin="round" />
                     <circle cx="10" cy="20" r="1.6" fill="currentColor" />
                     <circle cx="18" cy="20" r="1.6" fill="currentColor" />
                 </svg>
-                <span style="font-family: var(--font-ui);"><%= lang==="th" ? "ตะกร้า" : "CART" %></span>
+                <span>
+                    <%= lang==="th" ? "ตะกร้า" : "CART" %>
+                </span>
             </a>
         </nav>
-
     </main>
 </body>
-<script>
-    (function () {
-        const BASE_PATH = '/main'; // เปลี่ยนได้ตาม route หลักของคุณ
-
-        const stage = document.querySelector('.stage');
-        const burgerBtn = document.querySelector('#menuSection .menu-topbar .tab-icon');
-        if (!stage || !burgerBtn) return;
-
-        // สร้างแผ่นเมนูหนึ่งครั้ง
-        const sheet = document.createElement('aside');
-        sheet.className = 'sheet';
-        sheet.innerHTML = `
-    <div class="backdrop" data-close></div>
-    <div class="panel" role="dialog" aria-modal="true" aria-label="เมนู">
-      <div class="handle"></div>
-      <header><%= lang==="th" ? "เมนู" : "Menu" %></header>
-      <nav class="list" id="sheetList"></nav>
-    </div>`;
-        stage.appendChild(sheet);
-
-        const list = sheet.querySelector('#sheetList');
-        const shell = document.querySelector('.header-shell');
-
-        function buildList() {
-            list.innerHTML = '';
-            // 1) ใช้ลิงก์จาก .header-shell ถ้ามี
-            const candidates = shell ? shell.querySelectorAll('a, button[data-href]') : [];
-            if (candidates && candidates.length) {
-                candidates.forEach(n => {
-                    const href = n.getAttribute('href') || n.dataset.href || '#';
-                    const label = (n.textContent || '').trim();
-                    const a = document.createElement('a');
-                    a.href = href; a.textContent = label;
-                    list.appendChild(a);
-                });
-                return;
-            }
-            // 2) ไม่มีก็ fallback: สร้างจากชิปหมวดหมู่ด้านบน
-            document.querySelectorAll('#chipBar .chip').forEach(ch => {
-                const cat = ch.dataset.cat || 'all';
-                const label = (ch.textContent || '').trim();
-                const a = document.createElement('a');
-                a.href = (cat === 'all') ? BASE_PATH : `${BASE_PATH}/${encodeURIComponent(cat)}`;
-                a.textContent = label;
-                list.appendChild(a);
-            });
-        }
-
-        function openSheet() {
-            buildList();
-            sheet.classList.add('is-open');
-        }
-        function closeSheet() {
-            sheet.classList.remove('is-open');
-        }
-
-        // เปิดด้วยปุ่ม 3 ขีด
-        burgerBtn.addEventListener('click', openSheet);
-
-        // ปิดเมื่อกดฉากหลัง/กด Esc
-        sheet.addEventListener('click', e => { if (e.target.hasAttribute('data-close')) closeSheet(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
-
-        // แตะ/ลากลงเพื่อปิด (เบา ๆ)
-        (function addDragToClose() {
-            const panel = sheet.querySelector('.panel');
-            let down = false, sy = 0, start = 0;
-            panel.addEventListener('pointerdown', e => { down = true; sy = e.clientY; start = panel.scrollTop; });
-            panel.addEventListener('pointermove', e => {
-                if (!down) return;
-                const dy = e.clientY - sy;
-                // ปิดเฉพาะตอนเลื่อนอยู่บนสุดเท่านั้น
-                if (start === 0 && dy > 12) {
-                    sheet.style.setProperty('--tmp-ty', Math.min(dy, 160) + 'px');
-                    panel.style.transform = `translateY(calc( var(--tmp-ty, 0px) ))`;
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            panel.addEventListener('pointerup', () => {
-                down = false;
-                const ty = parseFloat((getComputedStyle(sheet).getPropertyValue('--tmp-ty') || '0').trim());
-                sheet.style.removeProperty('--tmp-ty');
-                panel.style.transform = '';
-                if (ty > 120) closeSheet();
-            });
-            panel.addEventListener('pointercancel', () => { down = false; panel.style.transform = ''; sheet.style.removeProperty('--tmp-ty'); });
-        })();
-    })();
-
-
-</script>
 
 </html>

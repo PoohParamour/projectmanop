@@ -7,7 +7,7 @@
 2 main_manu นน
 3 menu นน
 4 more พู
-5 cart ภีม
+5 cart ภีม 
 6 payment พู
 7 kitchen_list ภีม
 8 kitchen_detail ภีม

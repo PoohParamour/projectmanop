@@ -12,342 +12,365 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500;700;800&display=swap" rel="stylesheet">
 
-  <style>
-    :root {
-      --ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
-      --bg: #0b0c0e;
-      --panel: #121212;
-      --ink: #e5e7eb;
-      --ink-weak: #bfc3ca;
-      --divider: rgba(255, 255, 255, .08);
-      --brand: #10B34A;
-      --accent1: #f0a24e;
-      --accent2: #d88734;
-      --brown: #4a2f1f;
-      --radius-lg: 18px;
-      --radius-xl: 24px;
-    }
+<style>
+  :root {
+    --ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
+    --bg: #0b0c0e;
+    --panel: #121212;
+    --ink: #e5e7eb;
+    --ink-weak: #bfc3ca;
+    --divider: rgba(255, 255, 255, .08);
+    --brand: #10B34A;
+    --accent1: #f0a24e;
+    --accent2: #d88734;
+    --brown: #4a2f1f;
+    --radius-lg: 18px;
+    --radius-xl: 24px;
+  }
 
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      background: var(--bg);
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--ui);
-    }
+  html,
+  body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    background: var(--bg);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--ui);
+    overflow: hidden;
+  }
 
-    .stage {
-      position: relative;
-      width: 1200px;
-      height: 2000px;
-      overflow: hidden;
-      border-radius: 18px;
-      background:
-        linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
-        url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
-      box-shadow: 0 40px 100px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .06);
-    }
+  /* ✅ stage แบบเวอร์ชันแรก */
+  .stage {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1200px;
+    height: 2000px;
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
+      url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, .7),
+      inset 0 0 0 1px rgba(255, 255, 255, .06);
+  }
 
-    /* Topbar */
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      height: 84px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(18, 18, 18, .9);
-      backdrop-filter: blur(6px);
-      border-bottom: 1px solid var(--divider);
-    }
+  /* ✅ header ติดบน */
+  .topbar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 20;
+    height: 84px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(18, 18, 18, .9);
+    backdrop-filter: blur(6px);
+    border-bottom: 1px solid var(--divider);
+  }
 
-    .topbar h1 {
-      margin: 0;
-      font-size: 42px;
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
+  .topbar h1 {
+    margin: 0;
+    font-size: 42px;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
 
-    .topbar .back {
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 56px;
-      height: 56px;
-      border-radius: 16px;
-      display: grid;
-      place-items: center;
-      background: #1c1c1c;
-      border: 1px solid var(--divider);
-      color: #fff;
-      text-decoration: none;
-      font-size: 32px;
-      line-height: 0;
-      transition: transform .08s ease, filter .15s ease;
-    }
+  .topbar .back {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: #1c1c1c;
+    border: 1px solid var(--divider);
+    color: #fff;
+    text-decoration: none;
+    font-size: 32px;
+    line-height: 0;
+    transition: transform .08s ease, filter .15s ease;
+  }
 
-    .topbar .back:hover {
-      filter: brightness(1.15);
-      transform: translateY(-50%) translateY(-1px);
-    }
+  .topbar .back:hover {
+    filter: brightness(1.15);
+    transform: translateY(-50%) translateY(-1px);
+  }
 
-    /* Scroll container */
-    .scroll-area {
-      position: relative;
-      height: calc(100% - 84px);
-      overflow: hidden;
-    }
+  /* ✅ scroll ภายในเหมือนหน้า main_menu */
+  .scroll-area {
+    position: absolute;
+    top: 84px;
+    bottom: 140px;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
 
-    .container {
-      height: 100%;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
-      padding: 18px 18px 200px 18px;
-      /* เผื่อพื้นที่ให้ checkout bar ด้านล่าง */
-    }
+  .container {
+    padding: 18px 18px 250px 18px;
+    box-sizing: border-box;
+  }
 
-    /* Empty */
-    .empty {
-      margin: 120px auto;
-      width: min(820px, 90%);
-      text-align: center;
-      color: var(--ink);
-    }
+  /* ✅ scrollbar แบบบาง */
+  .scroll-area::-webkit-scrollbar {
+    width: 8px;
+  }
+  .scroll-area::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.25);
+    border-radius: 4px;
+  }
 
-    .empty h3 {
-      font-size: 48px;
-      margin: 0 0 10px;
-      font-weight: 800;
-      color: #fff;
-    }
+  /* ✅ empty */
+  .empty {
+    margin: 120px auto;
+    width: min(820px, 90%);
+    text-align: center;
+    color: var(--ink);
+  }
 
-    .empty p {
-      font-size: 28px;
-      margin: 0 0 26px;
-    }
+  .empty h3 {
+    font-size: 48px;
+    margin: 0 0 10px;
+    font-weight: 800;
+    color: #fff;
+  }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      text-decoration: none;
-      color: #fff;
-      padding: 18px 28px;
-      border-radius: 18px;
-      font-weight: 800;
-      font-size: 28px;
-      letter-spacing: .3px;
-      background: radial-gradient(160px 120px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
-        linear-gradient(180deg, var(--accent1), var(--accent2));
-      border: 1px solid rgba(255, 255, 255, .08);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 8px 20px rgba(0, 0, 0, .35);
-      -webkit-tap-highlight-color: transparent;
-      transition: transform .08s ease, filter .18s ease;
-    }
+  .empty p {
+    font-size: 28px;
+    margin: 0 0 26px;
+  }
 
-    .btn:hover {
-      transform: translateY(-1px);
-      filter: saturate(1.06);
-    }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #fff;
+    padding: 18px 28px;
+    border-radius: 18px;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: .3px;
+    background: radial-gradient(160px 120px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
+      linear-gradient(180deg, var(--accent1), var(--accent2));
+    border: 1px solid rgba(255, 255, 255, .08);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 8px 20px rgba(0, 0, 0, .35);
+    -webkit-tap-highlight-color: transparent;
+    transition: transform .08s ease, filter .18s ease;
+  }
 
-    /* List */
-    .cart-list {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-      max-width: 1040px;
-      margin: 0 auto;
-    }
+  .btn:hover {
+    transform: translateY(-1px);
+    filter: saturate(1.06);
+  }
 
-    .cart-item {
-      display: grid;
-      grid-template-columns: 200px 1fr;
-      gap: 18px;
-      align-items: center;
-      background: #141414;
-      border: 1px solid var(--divider);
-      border-radius: 22px;
-      padding: 14px;
-      box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
-    }
+  /* ✅ cart list */
+  .cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 1040px;
+    margin: 0 auto;
+  }
 
-    .thumb {
-      width: 100%;
-      aspect-ratio: 1/1;
-      object-fit: cover;
-      border-radius: 18px;
-      display: block;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, .35);
-    }
+  .cart-item {
+    display: grid;
+    margin-top: 0;
+    grid-template-columns: 200px 1fr;
+    gap: 18px;
+    align-items: center;
+    background: #141414;
+    border: 1px solid var(--divider);
+    border-radius: 22px;
+    padding: 14px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, .35);
+  }
 
-    .info {
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+  .thumb {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 18px;
+    display: block;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, .35);
+  }
 
-    .title {
-      margin: 0;
-      font-size: 36px;
-      font-weight: 800;
-    }
+  .info {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-    .detail {
-      margin: 0;
-      color: var(--ink-weak);
-      font-size: 24px;
-    }
+  .title {
+    margin: 0;
+    font-size: 36px;
+    font-weight: 800;
+  }
 
-    .opts {
-      margin: 0;
-      padding-left: 22px;
-      color: var(--ink-weak);
-      font-size: 22px;
-    }
+  .detail {
+    margin: 0;
+    color: var(--ink-weak);
+    font-size: 24px;
+  }
 
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
+  .opts {
+    margin: 0;
+    padding-left: 22px;
+    color: var(--ink-weak);
+    font-size: 22px;
+  }
 
-    /* Stepper (ใช้ฟอร์มเดิม) */
-    .stepper {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+  .row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+  }
 
-    .qty {
-      min-width: 44px;
-      text-align: center;
-      font-size: 30px;
-      font-weight: 800;
-    }
+  .stepper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-    .qty-btn {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      border: 1px solid var(--divider);
-      color: #fff;
-      background: #1e1e1e;
-      display: grid;
-      place-items: center;
-      font-size: 30px;
-      font-weight: 900;
-      line-height: 0;
-      cursor: pointer;
-      transition: transform .08s ease, filter .18s ease;
-    }
+  .qty {
+    min-width: 44px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 800;
+  }
 
-    .qty-btn:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
-    }
+  .qty-btn {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--divider);
+    color: #fff;
+    background: #1e1e1e;
+    display: grid;
+    place-items: center;
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 0;
+    cursor: pointer;
+    transition: transform .08s ease, filter .18s ease;
+  }
 
-    .qty-btn.plus {
-      background: radial-gradient(90px 60px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
-        linear-gradient(180deg, var(--accent1), var(--accent2));
-      border: 1px solid rgba(255, 255, 255, .08);
-    }
+  .qty-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
 
-    .line-price {
-      font-size: 32px;
-      font-weight: 800;
-    }
+  .qty-btn.plus {
+    background: radial-gradient(90px 60px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
+      linear-gradient(180deg, var(--accent1), var(--accent2));
+    border: 1px solid rgba(255, 255, 255, .08);
+  }
 
-    .remove {
-      margin-top: 6px;
-    }
+  .line-price {
+    font-size: 32px;
+    font-weight: 800;
+  }
 
-    .remove-btn {
-      background: transparent;
-      border: 0;
-      color: #ffb4b4;
-      font-weight: 700;
-      font-size: 22px;
-      cursor: pointer;
-      padding: 8px 0;
-      text-decoration: underline dotted rgba(255, 255, 255, .25);
-    }
+  .remove {
+    margin-top: 6px;
+  }
 
-    /* Checkout bar */
-    .checkout {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      background: var(--brown);
-      border-radius: 20px;
-      padding: 18px 22px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      border: 1px solid rgba(255, 255, 255, .06);
-      box-shadow: 0 -2px 0 rgba(0, 0, 0, .25);
-    }
+  .remove-btn {
+    background: transparent;
+    border: 0;
+    color: #ffb4b4;
+    font-weight: 700;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 8px 0;
+    text-decoration: underline dotted rgba(255, 255, 255, .25);
+  }
 
-    .sum {
-      display: flex;
-      align-items: baseline;
-      gap: 12px;
-    }
+.checkout {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 1200px;   /* จำกัดไม่เกิน stage */
+  background: var(--brown);
+  border-radius: 0;    /* ✅ ไม่มีมุมโค้ง */
+  padding: 20px 40px ;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, .5);
+  z-index: 100;
+}
 
-    .sum .label {
-      font-size: 26px;
-      color: #f1e9e1;
-    }
+  .sum {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
 
-    .sum .value {
-      font-size: 40px;
-      font-weight: 800;
-    }
+  .sum .label {
+    margin-left: 40px;
+    font-size: 36px;
+    color: #f1e9e1;
+  }
 
-    .pay-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: #fff;
-      text-decoration: none;
-      height: 64px;
-      padding: 0 32px;
-      border-radius: 16px;
-      font-weight: 800;
-      letter-spacing: .5px;
-      text-transform: uppercase;
-      font-size: 28px;
-      background: radial-gradient(160px 120px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
-        linear-gradient(180deg, var(--accent1), var(--accent2));
-      border: 1px solid rgba(255, 255, 255, .08);
-      -webkit-tap-highlight-color: transparent;
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 10px 22px rgba(0, 0, 0, .35);
-      transition: transform .08s ease, filter .18s ease;
-    }
+  .sum .value {
+    font-size: 40px;
+    font-weight: 800;
+  }
 
-    .pay-btn:hover {
-      transform: translateY(-1px);
-      filter: saturate(1.06);
-    }
+  .pay-btn {
+    margin-right: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: #fff;
+    text-decoration: none;
+    height: 64px;
+    padding: 0 32px;
+    border-radius: 16px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    font-size: 28px;
+    background: radial-gradient(160px 120px at 50% 0%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
+      linear-gradient(180deg, var(--accent1), var(--accent2));
+    border: 1px solid rgba(255, 255, 255, .08);
+    -webkit-tap-highlight-color: transparent;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), 0 10px 22px rgba(0, 0, 0, .35);
+    transition: transform .08s ease, filter .18s ease;
+  }
 
-    /* ตัวเลขคมเท่ากัน */
-    .line-price,
-    .sum .value {
-      font-variant-numeric: tabular-nums;
-      font-feature-settings: "tnum" 1, "lnum" 1;
-    }
-  </style>
+  .pay-btn:hover {
+    transform: translateY(-1px);
+    filter: saturate(1.06);
+  }
+
+  .line-price,
+  .sum .value {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1, "lnum" 1;
+  }
+</style>
+
 </head>
 
 <body>
@@ -409,52 +432,54 @@
                             </ul>
                             <% } %>
 
-                            <% if (item.note) { %>
-                              <p class="detail"><%= lang==="th" ? "โน็ต : " : "Note : " %><%= item.note %>
-                              </p>
-                            <% } %>
+                              <% if (item.note) { %>
+                                <p class="detail">
+                                  <%= lang==="th" ? "โน็ต : " : "Note : " %>
+                                    <%= item.note %>
+                                </p>
+                                <% } %>
 
-                              <div class="row">
-                                <div class="stepper">
-                                  <!-- decrease -->
-                                  <form action="/cart/update" method="POST">
+                                  <div class="row">
+                                    <div class="stepper">
+                                      <!-- ลด -->
+                                      <form action="/cart/update" method="POST">
+                                        <input type="hidden" name="index" value="<%= idx %>">
+                                        <input type="hidden" name="action" value="decrease">
+                                        <button type="submit" class="qty-btn">−</button>
+                                      </form>
+
+                                      <span class="qty">
+                                        <%= item.quantity %>
+                                      </span>
+
+                                      <!-- เพิ่ม -->
+                                      <form action="/cart/update" method="POST">
+                                        <input type="hidden" name="index" value="<%= idx %>">
+                                        <input type="hidden" name="action" value="increase">
+                                        <button type="submit" class="qty-btn plus">+</button>
+                                      </form>
+                                    </div>
+
+                                    <div class="line-price">฿ <%= line %>
+                                    </div>
+                                  </div>
+
+                                  <form class="remove" action="/cart/remove" method="POST">
                                     <input type="hidden" name="index" value="<%= idx %>">
-                                    <input type="hidden" name="action" value="decrease">
-                                    <button type="submit" class="qty-btn">−</button>
+                                    <button type="submit" class="remove-btn">
+                                      <%= lang==="th" ? "ลบออก" : "Remove" %>
+                                    </button>
                                   </form>
-
-                                  <span class="qty">
-                                    <%= item.quantity %>
-                                  </span>
-
-                                  <!-- increase -->
-                                  <form action="/cart/update" method="POST">
-                                    <input type="hidden" name="index" value="<%= idx %>">
-                                    <input type="hidden" name="action" value="increase">
-                                    <button type="submit" class="qty-btn plus">+</button>
-                                  </form>
-                                </div>
-
-                                <div class="line-price">฿ <%= line %>
-                                </div>
-                              </div>
-
-                              <form class="remove" action="/cart/remove" method="POST">
-                                <input type="hidden" name="index" value="<%= idx %>">
-                                <button type="submit" class="remove-btn">
-                                  <%= lang==="th" ? "ลบออก" : "Remove" %>
-                                </button>
-                              </form>
                     </div>
                   </article>
 
                   <% }) %>
               </div>
 
-              <!-- Checkout summary -->
+  
               <div class="checkout">
                 <div class="sum">
-                  <span class="label">
+                  <span class="label" style>
                     <%= lang==="th" ? "ยอดรวม" : "Total" %>
                   </span>
                   <span class="value">฿ <%= total %></span>

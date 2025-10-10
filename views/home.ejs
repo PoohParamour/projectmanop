@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
     :root {
       --text: #fff;
@@ -28,6 +28,7 @@
       justify-content: center;
       font-family: system-ui, var(--font-ui);
       color: var(--text);
+      overflow: hidden;
     }
 
     /* กรอบจอมือถือ/โปสเตอร์ */
@@ -192,6 +193,111 @@
     .action--sharp-bl {
       border-radius: 100px 80px 100px 10px;
     }
+
+    /* ✅ Responsive สำหรับ iPad Gen 7–10 (แนวตั้ง/แนวนอน) */
+@media (max-width: 1024px) {
+
+  /* ปรับกรอบหลัก */
+  .stage {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* ภาพพื้นหลังไม่ให้ถูกครอบ */
+  body {
+    overflow: hidden;
+    background: #000;
+  }
+
+  /* โลโก้กลางจอ */
+  .logo-wrap {
+    top: 28%;
+  }
+
+  .logo {
+    width: 420px;
+    height: 420px;
+  }
+
+  /* ข้อความ tagline */
+  .tagline {
+    top: 68%;
+    font-size: 36px;
+    line-height: 1.2;
+    padding: 0 24px;
+  }
+
+  /* ปุ่มสองอันล่าง */
+  .actions {
+    bottom: 80px;
+    gap: 48px;
+    flex-wrap: wrap; /* ถ้าแนวตั้งจะสลับเป็น 2 แถว */
+  }
+
+  .action {
+    width: 220px;
+    height: 220px;
+    border-radius: 24%;
+  }
+
+  .icon {
+    width: 130px;
+    height: 120px;
+  }
+
+  .action span {
+    font-size: 28px;
+  }
+
+  /* ปุ่มธงด้านขวาบน */
+  .lang {
+    top: 32px;
+    right: 32px;
+  }
+
+  .flag-btn img {
+    width: 60px;
+    height: 40px;
+  }
+
+  .lang h3 {
+    font-size: 18px;
+  }
+}
+
+/* ✅ แนวนอน (landscape) ปรับ layout ให้บาลานซ์ */
+@media (max-height: 850px) and (orientation: landscape) {
+  .logo-wrap {
+    top: 20%;
+  }
+
+  .logo {
+    width: 340px;
+    height: 340px;
+  }
+
+  .tagline {
+    top: 60%;
+    font-size: 30px;
+  }
+
+  .actions {
+    bottom: 40px;
+    gap: 40px;
+  }
+
+  .action {
+    width: 180px;
+    height: 180px;
+  }
+
+  .action span {
+    font-size: 22px;
+  }
+}
+
   </style>
 </head>
 
