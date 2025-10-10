@@ -94,7 +94,7 @@
     }
 
     /* รายการอาหาร */
-    #items{ padding: 0 calc(18px * var(--scale)) calc(160px * var(--scale)); display:flex; flex-direction:column; gap: calc(14px * var(--scale)); }
+    #items{ padding: 0 calc(18px * var(--scale)) ; display:flex; flex-direction:column; gap: calc(14px * var(--scale)); }
 
     .item{
       display:grid; grid-template-columns: auto 1fr auto; align-items:center;
@@ -124,7 +124,7 @@
       height: var(--footer-h);
       display:flex; align-items:center; justify-content:center;
       padding: calc(14px * var(--scale));
-      background: linear-gradient(0deg, rgba(0,0,0,.75), rgba(0,0,0,0));
+      /* background: linear-gradient(0deg, rgba(0,0,0,.75), rgba(0,0,0,0)); */
       border-top:1px solid var(--border);
       backdrop-filter: blur(4px);
     }
@@ -172,6 +172,11 @@
     const btnDone  = document.getElementById('btn-done');
     const chip     = document.getElementById('statusChip');
 
+    function escapeHtml(s) {
+        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+        return String(s).replace(/[&<>"']/g, ch => map[ch]);
+      }
+
     async function load(){
       const res  = await fetch('/api/kitchen/order/' + orderId);
       const rows = await res.json();
@@ -194,6 +199,10 @@
         const img  = (it.item_name_en && it.category_id != null)
                       ? `/img/menu/${it.category_id}/${it.item_name_en}.png`
                       : '/img/placeholder.png';
+        const noteHtml = it.item_note && it.item_note.trim()
+          ? `<div class="opt">โน้ต: ${escapeHtml(it.item_note)}</div>`
+          : '';
+
         const opt  = it.options_text ? `<div class="opt">${it.options_text}</div>` : '';
         return `
           <div class="item">
@@ -201,6 +210,7 @@
             <div>
               <div class="name">${name}</div>
               ${opt}
+              ${noteHtml} 
             </div>
             <div class="qty">× ${it.quantity}</div>
           </div>

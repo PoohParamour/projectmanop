@@ -224,7 +224,7 @@
         <% }); %>
     </div>
 
-    <script>
+    <!-- <script>
       (function () {
         const vp = document.getElementById('chipViewport');
         const bar = document.getElementById('chipBar');
@@ -248,68 +248,101 @@
         });
 
         // ===== Inertia drag สำหรับเมาส์ (ทัชมี momentum อยู่แล้ว) =====
-        if (vp) {
-          let down = false, startX = 0, startLeft = 0, lastX = 0, lastT = 0, vx = 0, raf = null;
+        // if (vp) {
+        //   let down = false, startX = 0, startLeft = 0, lastX = 0, lastT = 0, vx = 0, raf = null;
 
-          vp.addEventListener('pointerdown', e => {
-            if (e.pointerType !== 'mouse') return;        // ทัช/เพน ปล่อย native
-            down = true; dragging = false; startX = e.clientX; startLeft = vp.scrollLeft;
-            lastX = startX; lastT = performance.now(); vx = 0; vp.classList.add('is-dragging');
+        //   vp.addEventListener('pointerdown', e => {
+        //     if (e.pointerType !== 'mouse') return;        // ทัช/เพน ปล่อย native
+        //     down = true; dragging = false; startX = e.clientX; startLeft = vp.scrollLeft;
+        //     lastX = startX; lastT = performance.now(); vx = 0; vp.classList.add('is-dragging');
+        //   });
+        //   vp.addEventListener('pointermove', e => {
+        //     if (!down || e.pointerType !== 'mouse') return;
+        //     const now = performance.now(), dx = e.clientX - startX;
+        //     if (!dragging && Math.abs(dx) > 6) dragging = true;
+        //     if (dragging) {
+        //       vp.scrollLeft = startLeft - dx;
+        //       vx = (e.clientX - lastX) / Math.max(1, now - lastT); // px/ms
+        //       lastX = e.clientX; lastT = now;
+        //       e.preventDefault();
+        //     }
+        //   }, { passive: false });
+
+        //   function endDrag(e) {
+        //     if (e && e.pointerType !== 'mouse') return;
+        //     if (dragging) {
+        //       const DECAY = 0.0028;         // แรงหน่วง (มาก = หยุดไว)
+        //       const MINV = 0.02;           // หยุดเมื่อช้ามาก ๆ
+        //       const MAX = Math.max(0, vp.scrollWidth - vp.clientWidth);
+        //       let v = -vx, s = vp.scrollLeft, prev = performance.now();
+        //       cancelAnimationFrame(raf);
+        //       (function step(t) {
+        //         const dt = t - prev; prev = t;
+        //         v *= Math.exp(-DECAY * dt);
+        //         if (Math.abs(v) < MINV) return;
+        //         s += v * dt;
+        //         if (s < 0) { s = 0; v = 0; }
+        //         if (s > MAX) { s = MAX; v = 0; }
+        //         vp.scrollLeft = s;
+        //         raf = requestAnimationFrame(step);
+        //       })(prev);
+        //     }
+        //     down = false; vp.classList.remove('is-dragging');
+        //     // กันคลิกหลุดครั้งสุดท้ายจากการลาก
+        //     setTimeout(() => dragging = false, 0);
+        //   }
+        //   vp.addEventListener('pointerup', endDrag);
+        //   vp.addEventListener('pointercancel', endDrag);
+        //   vp.addEventListener('pointerleave', endDrag);
+
+        //   // รองรับสก์โรลลิ่งแนวตั้งให้กลายเป็นแนวนอนบนเมาส์ล้อ
+        //   vp.addEventListener('wheel', e => {
+        //     if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+        //       vp.scrollLeft += e.deltaY;
+        //       e.preventDefault();
+        //     }
+        //   }, { passive: false });
+
+        //   // ถ้ากำลังลากอยู่ ให้ยกเลิก click
+        //   vp.addEventListener('click', e => { if (dragging) { e.preventDefault(); e.stopPropagation(); } });
+      })
+
+      // ค่าเริ่มต้น
+      const first = chips()[0];
+      if (first) first.classList.add('is-active');
+      }) ();
+    </script> -->
+
+    <script>
+      (() => {
+        const bar = document.getElementById('chipBar');
+        const chips = () => bar ? Array.from(bar.querySelectorAll('.chip')) : [];
+        const cards = Array.from(document.querySelectorAll('#menuSection #menuGrid .menu-card'));
+        if (!bar || !chips().length || !cards.length) return; // กันพังถ้า DOM ยังไม่มา
+
+        function activate(cat, btn) {
+          // ทำ active ให้เฉพาะปุ่มที่กด (หรือปุ่มที่มี data-cat เดียวกัน)
+          chips().forEach(c => c.classList.toggle('is-active', c === btn || c.dataset.cat === cat));
+          // กรองการ์ดตาม data-cat
+          cards.forEach(c => {
+            const show = (cat === 'all') || (c.dataset.cat === cat);
+            c.style.display = show ? '' : 'none';
           });
-          vp.addEventListener('pointermove', e => {
-            if (!down || e.pointerType !== 'mouse') return;
-            const now = performance.now(), dx = e.clientX - startX;
-            if (!dragging && Math.abs(dx) > 6) dragging = true;
-            if (dragging) {
-              vp.scrollLeft = startLeft - dx;
-              vx = (e.clientX - lastX) / Math.max(1, now - lastT); // px/ms
-              lastX = e.clientX; lastT = now;
-              e.preventDefault();
-            }
-          }, { passive: false });
-
-          function endDrag(e) {
-            if (e && e.pointerType !== 'mouse') return;
-            if (dragging) {
-              const DECAY = 0.0028;         // แรงหน่วง (มาก = หยุดไว)
-              const MINV = 0.02;           // หยุดเมื่อช้ามาก ๆ
-              const MAX = Math.max(0, vp.scrollWidth - vp.clientWidth);
-              let v = -vx, s = vp.scrollLeft, prev = performance.now();
-              cancelAnimationFrame(raf);
-              (function step(t) {
-                const dt = t - prev; prev = t;
-                v *= Math.exp(-DECAY * dt);
-                if (Math.abs(v) < MINV) return;
-                s += v * dt;
-                if (s < 0) { s = 0; v = 0; }
-                if (s > MAX) { s = MAX; v = 0; }
-                vp.scrollLeft = s;
-                raf = requestAnimationFrame(step);
-              })(prev);
-            }
-            down = false; vp.classList.remove('is-dragging');
-            // กันคลิกหลุดครั้งสุดท้ายจากการลาก
-            setTimeout(() => dragging = false, 0);
-          }
-          vp.addEventListener('pointerup', endDrag);
-          vp.addEventListener('pointercancel', endDrag);
-          vp.addEventListener('pointerleave', endDrag);
-
-          // รองรับสก์โรลลิ่งแนวตั้งให้กลายเป็นแนวนอนบนเมาส์ล้อ
-          vp.addEventListener('wheel', e => {
-            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-              vp.scrollLeft += e.deltaY;
-              e.preventDefault();
-            }
-          }, { passive: false });
-
-          // ถ้ากำลังลากอยู่ ให้ยกเลิก click
-          vp.addEventListener('click', e => { if (dragging) { e.preventDefault(); e.stopPropagation(); } });
+          // เลื่อนชิปที่กดเข้ากลาง และเลื่อนเนื้อหาขึ้นบน
+          if (btn) btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          document.querySelector('.container')?.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ค่าเริ่มต้น
+        // คลิกชิป (iPad Safari รองรับ click อยู่แล้ว)
+        bar.addEventListener('click', e => {
+          const btn = e.target.closest('.chip');
+          if (!btn) return;
+          activate(btn.dataset.cat || 'all', btn);
+        });
+
+        // ค่าเริ่มต้น: ใช้ชิปตัวแรก
         const first = chips()[0];
-        if (first) first.classList.add('is-active');
+        if (first) activate(first.dataset.cat || 'all', first);
       })();
     </script>
   </section>

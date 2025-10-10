@@ -142,7 +142,7 @@ app.listen(port, () => {
 app.post("/add-to-cart", (req, res) => {
   // 📦 ดึงค่าที่ส่งมาจากฟอร์มในหน้า more.ejs
   // เช่น menu_item_id = 27, quantity = 2, และ options ต่าง ๆ
-  const { menu_item_id, quantity, ...rest } = req.body;
+  const { menu_item_id, quantity, note, ...rest } = req.body;
 
   // ถ้ายังไม่มี session.cart → ให้สร้าง array ว่างไว้ก่อน
   if (!req.session.cart) req.session.cart = [];
@@ -196,7 +196,8 @@ app.post("/add-to-cart", (req, res) => {
     req.session.cart.push({
       menu_item_id,   // รหัสเมนู
       quantity: qty,  // จำนวนที่เลือก
-      options         // ตัวเลือก (option group)
+      options,         // ตัวเลือก (option group)
+      note: note ? String(note).trim() : null // ← เก็บ note กับรายการ
     });
   }
   // 🧾 แสดงข้อมูลตะกร้าใน console เพื่อ debug
@@ -250,6 +251,7 @@ app.get("/cart", (req, res) => {
             ...menu,
             quantity: c.quantity,
             rawOptions: c.options, // option ที่เลือกจากหน้า more.ejs
+            note: c.note ? String(c.note).trim() : null,  
           }
         : null;
     }).filter(Boolean); // กรอง null ถ้ามีเมนูที่หาไม่เจอใน DB
@@ -438,8 +440,8 @@ app.post('/checkout', (req, res) => {
             const qty = parseInt(it.quantity, 10) || 1;
             db.run(
               `INSERT INTO OrderItem(menu_item_id, order_id, quantity, unit_price, note)
-               VALUES (?,?,?,?,NULL)`,
-              [it.menu_item_id, orderId, qty, 0],        // ราคา 0 ไว้ก่อน
+               VALUES (?,?,?,?,?)`,
+              [it.menu_item_id, orderId, qty, 0, it.note],        // ราคา 0 ไว้ก่อน
               function (err) {
                 if (err) return rb(err);
                 const oiId = this.lastID; done();
@@ -517,46 +519,104 @@ app.get('/api/kitchen', (req, res) => {
 });
 
 
+// app.get('/api/kitchen/order/:orderId', (req, res) => {
+//   const sql = `
+//     SELECT 
+//       o.order_id, o.order_type, o.status,
+//       oi.order_item_id, oi.quantity, oi.note AS item_note
+//       m.category_id AS category_id,              -- ✅ เพิ่มบรรทัดนี้
+//       m.name_thai AS item_name_th, m.name_eng AS item_name_en,
+      
+//     (
+//         SELECT GROUP_CONCAT(ov.name, ', ')
+//         FROM OrderItemOption oio
+//         JOIN Option_Value ov ON ov.option_value_id = oio.option_value_id
+//         JOIN Option_Group og ON og.option_group_id = ov.option_group_id
+//         WHERE oio.order_item_id = oi.order_item_id
+//         ORDER BY og.option_group_id, ov.option_value_id 
+//       ) AS options_text
+
+
+//     FROM "Order" o
+//     JOIN OrderItem oi ON oi.order_id = o.order_id
+//     JOIN MenuItem  m  ON m.menu_item_id = oi.menu_item_id
+//     WHERE o.order_id = ?
+//     ORDER BY oi.order_item_id ASC
+//   `;
+//   db.all(sql, [req.params.orderId], (err, rows) =>
+//     err ? res.status(500).json({ error: err.message }) : res.json(rows)
+//   );
+// });
+
+// app.all('/api/kitchen/orders/:orderId/done', (req, res) => {
+//   if (!['PATCH', 'POST'].includes(req.method)) return res.status(405).json({ error: 'Method not allowed' });
+//   const id = parseInt(req.params.orderId, 10);
+//   if (Number.isNaN(id)) return res.status(400).json({ error: 'bad orderId' });
+
+//   db.run(`UPDATE "Order" SET status='DONE' WHERE order_id=?`, [id], function (err) {
+//     if (err) return res.status(500).json({ error: err.message });
+//     // this.changes = 0 ถ้าอัปเดตก่อนหน้าเป็น DONE อยู่แล้ว
+//     res.json({ ok: true, order_id: id, changes: this.changes });
+//   });
+// });
+
+// GET one order (with item_note, category_id, options_text)
 app.get('/api/kitchen/order/:orderId', (req, res) => {
+  const id = parseInt(req.params.orderId, 10);
+  if (Number.isNaN(id)) return res.status(400).json({ error: 'bad orderId' });
+
   const sql = `
     SELECT 
       o.order_id, o.order_type, o.status,
-      oi.order_item_id, oi.quantity,
-      m.category_id AS category_id,              -- ✅ เพิ่มบรรทัดนี้
-      m.name_thai AS item_name_th, m.name_eng AS item_name_en,
-      
-    (
-        SELECT GROUP_CONCAT(ov.name, ', ')
+      oi.order_item_id, oi.quantity, 
+      oi.note AS item_note,
+      m.category_id AS category_id,
+      m.name_thai AS item_name_th, 
+      m.name_eng  AS item_name_en,
+      (
+        SELECT GROUP_CONCAT(og.name || ': ' || ov.name, ', ')
         FROM OrderItemOption oio
         JOIN Option_Value ov ON ov.option_value_id = oio.option_value_id
         JOIN Option_Group og ON og.option_group_id = ov.option_group_id
         WHERE oio.order_item_id = oi.order_item_id
-        ORDER BY og.option_group_id, ov.option_value_id 
+        ORDER BY og.option_group_id, ov.option_value_id
       ) AS options_text
-
-
     FROM "Order" o
     JOIN OrderItem oi ON oi.order_id = o.order_id
     JOIN MenuItem  m  ON m.menu_item_id = oi.menu_item_id
     WHERE o.order_id = ?
     ORDER BY oi.order_item_id ASC
   `;
-  db.all(sql, [req.params.orderId], (err, rows) =>
-    err ? res.status(500).json({ error: err.message }) : res.json(rows)
-  );
+
+  db.all(sql, [id], (err, rows) => {
+    if (err) {
+      console.error('API /api/kitchen/order error:', {
+        message: err.message, code: err.code, params: [id], sql
+      });
+      return res.status(500).json({ error: err.message, code: err.code });
+    }
+    res.json(rows);
+  });
 });
 
+// PATCH/POST mark order DONE
 app.all('/api/kitchen/orders/:orderId/done', (req, res) => {
-  if (!['PATCH', 'POST'].includes(req.method)) return res.status(405).json({ error: 'Method not allowed' });
+  if (!['PATCH', 'POST'].includes(req.method)) {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
   const id = parseInt(req.params.orderId, 10);
   if (Number.isNaN(id)) return res.status(400).json({ error: 'bad orderId' });
 
-  db.run(`UPDATE "Order" SET status='DONE' WHERE order_id=?`, [id], function (err) {
-    if (err) return res.status(500).json({ error: err.message });
-    // this.changes = 0 ถ้าอัปเดตก่อนหน้าเป็น DONE อยู่แล้ว
+  const sql = `UPDATE "Order" SET status='DONE' WHERE order_id=?`;
+  db.run(sql, [id], function (err) {
+    if (err) {
+      console.error('API /done error:', { message: err.message, code: err.code, params: [id], sql });
+      return res.status(500).json({ error: err.message, code: err.code });
+    }
     res.json({ ok: true, order_id: id, changes: this.changes });
   });
 });
+
 
 // Payment 
 app.get('/payment', (req, res) => {
