@@ -151,7 +151,6 @@
       <header>
         <a href="/kitchen" class="back" aria-label="back">‹</a>
         <div class="title" id="title">Order #<%= orderId %></div>
-        <!-- สถานะจะแทรกคลาส chip--done ผ่าน JS ตามจริง -->
         <div class="chip" id="statusChip">กำลังโหลด…</div>
       </header>
 
@@ -171,11 +170,6 @@
     const footer   = document.getElementById('footer');
     const btnDone  = document.getElementById('btn-done');
     const chip     = document.getElementById('statusChip');
-
-    function escapeHtml(s) {
-        const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
-        return String(s).replace(/[&<>"']/g, ch => map[ch]);
-      }
 
     async function load(){
       const res  = await fetch('/api/kitchen/order/' + orderId);
@@ -200,7 +194,7 @@
                       ? `/img/menu/${it.category_id}/${it.item_name_en}.png`
                       : '/img/placeholder.png';
         const noteHtml = it.item_note && it.item_note.trim()
-          ? `<div class="opt">โน้ต: ${escapeHtml(it.item_note)}</div>`
+          ? `<div class="opt">โน้ต: ${it.item_note}</div>`
           : '';
 
         const opt  = it.options_text ? `<div class="opt">${it.options_text}</div>` : '';
@@ -217,7 +211,6 @@
         `;
       }).join('');
 
-      // ถ้า DONE แล้ว ไม่ต้องให้กดซ้ำ
       footer.style.display = head.status === 'DONE' ? 'none' : 'flex';
     }
 

@@ -49,7 +49,6 @@
       width: 1200px;
       height: 2000px;
       overflow: hidden;
-      border-radius: 18px;
       background:
         linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
         url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
@@ -296,7 +295,7 @@
 <body>
   <main class="stage">
     <header class="topbar">
-      <a href="/main" class="back" aria-label="กลับ">×</a>
+      <a href="/main" class="back" >×</a>
       <div class="title">
         <%= lang==="th" ? "ชำระเงิน" : "Payment" %>
       </div>
@@ -304,73 +303,164 @@
 
     <section class="content">
       <% if (!paid) { %>
-        <article class="pay-card">
-          <div class="amount">
-            <label>
-              <%= lang==="th" ? "จำนวนเงินที่ต้องชำระ" : "Amount due" %>
-            </label>
-            <div class="value">฿ <%= amount %>
-            </div>
-          </div>
 
-          <div class="qr-wrap">
-            <div class="qr-box">
-              <img src="<%= qrCodeUrl %>" alt="QR Code">
-            </div>
-
-            <div>
-              <div class="pill">
-                <span>
-                  <%= lang==="th" ? "โปรดชำระภายใน" : "Pay within" %>
-                </span>
-                <span class="timer" id="countdown">05:00</span>
+        <% if (cashier==='1' ) { %>
+          <% if (!method) { %>
+            <!-- แคชเชียร์: หน้าการ์ดเลือกวิธีชำระ -->
+            <article class="pay-card" style="max-width:420px">
+              <div class="title" style="text-align:center;margin:0 0 12px">
+                <%= lang==='th' ? 'โปรดเลือกวิธีชำระเงิน' : 'Please choose a payment method' %>
               </div>
-              <p class="hint" style="margin-top:16px;">
-                <%= lang==="th"
-                  ? "สแกน QR ผ่านแอปธนาคารของคุณเพื่อชำระเงิน ระบบจะยืนยันอัตโนมัติภายหลัง หรือกดปุ่มยืนยันเมื่อชำระเสร็จ"
-                  : "Scan the QR with your banking app. The system will confirm shortly, or press Confirm after payment."
-                  %>
-              </p>
-            </div>
-          </div>
+              <div class="actions">
+                <a class="btn" href="/payment?method=qr&total=<%= total %>">
+                  <%= lang==='th' ? 'QR CODE' : 'QR CODE' %>
+                </a>
+                <a class="btn" href="/payment?method=cash&total=<%= total %>">
+                  <%= lang==='th' ? 'เงินสด' : 'Cash' %>
+                </a>
+              </div>
+            </article>
 
-          <div class="actions">
-            <form action="/checkout" method="post">
-              <input type="hidden" name="redirect" value="/payment/success">
-              <button type="submit" class="btn btn--lg">
-                <%= lang==="th" ? "ยืนยันการชำระเงิน" : "Confirm" %>
-              </button>
-            </form>
-          </div>
-        </article>
-        <% } else { %>
-          <article class="success-card">
-            <div class="check">✔</div>
-            <div class="big">
-              <%= lang==="th" ? "ชำระเงินเรียบร้อย" : "Payment successful" %>
-            </div>
-            <div style="font-size: 25px;">
-              <%= lang==="th" ? "เลขออเดอร์ของคุณ" : "Your order number" %>
-            </div>
-            <div class="order-id" style="font-size: 28px;">
-              <%= orderId %>
-            </div>
-            <p class="hint">
-              <%= lang==="th" ? "ขอบคุณที่ใช้บริการ กรุณารอเรียกคิวจากพนักงาน"
-                : "Thanks for your order. Please wait for your pickup/serve." %>
-            </p>
-            <a class="btn btn--lg" href="/">
-              <%= lang==="th" ? "กลับหน้าแรก" : "Back to home" %>
-            </a>
-          </article>
-          <% } %>
+            <% } else if (method==='cash' ) { %>
+              <!-- แคชเชียร์: โหมดเงินสด -->
+              <article class="pay-card">
+                <div class="amount">
+                  <label>
+                    <%= lang==="th" ? "จำนวนเงินที่ต้องชำระ" : "Amount due" %>
+                  </label>
+                  <div class="value">฿ <%= total %>
+                  </div>
+                </div>
+                <div class="actions">
+                  <form action="/checkout" method="post">
+                    <input type="hidden" name="paid_by" value="cash">
+                    <input type="hidden" name="redirect" value="/payment/success">
+                    <button type="submit" class="btn btn--lg">
+                      <%= lang==="th" ? "ยืนยันการรับเงิน" : "Confirm cash received" %>
+                    </button>
+                  </form>
+                </div>
+              </article>
+
+              <% } else { %>
+                <!-- แคชเชียร์: โหมด QR -->
+                <article class="pay-card">
+                  <div class="amount">
+                    <label>
+                      <%= lang==="th" ? "จำนวนเงินที่ต้องชำระ" : "Amount due" %>
+                    </label>
+                    <div class="value">฿ <%= total %>
+                    </div>
+                  </div>
+
+                  <div class="qr-wrap">
+                    <div class="qr-box">
+                      <img src="<%= qrCodeUrl %>" alt="QR Code">
+                    </div>
+                    <div>
+                      <div class="pill">
+                        <span>
+                          <%= lang==="th" ? "โปรดชำระภายใน" : "Pay within" %>
+                        </span>
+                        <span class="timer" id="countdown">05:00</span>
+                      </div>
+                      <p class="hint" style="margin-top:16px;">
+                        <%= lang==="th"
+                          ? "สแกน QR ผ่านแอปธนาคารของคุณเพื่อชำระเงิน ระบบจะยืนยันอัตโนมัติภายหลัง หรือกดปุ่มยืนยันเมื่อชำระเสร็จ"
+                          : "Scan the QR with your banking app. The system will confirm shortly, or press Confirm after payment."
+                          %>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div class="actions">
+                    <form action="/checkout" method="post">
+                      <input type="hidden" name="redirect" value="/payment/success">
+                      <button type="submit" class="btn btn--lg">
+                        <%= lang==="th" ? "ยืนยันการชำระเงิน" : "Confirm" %>
+                      </button>
+                    </form>
+                  </div>
+                </article>
+                <% } %>
+
+                  <% } else { %>
+                    <!-- ลูกค้า: แสดง QR ทันที (ไม่มีหน้ากลางให้เลือกวิธี) -->
+                    <article class="pay-card">
+                      <div class="amount">
+                        <label>
+                          <%= lang==="th" ? "จำนวนเงินที่ต้องชำระ" : "Amount due" %>
+                        </label>
+                        <div class="value">฿ <%= total %>
+                        </div>
+                      </div>
+
+                      <div class="qr-wrap">
+                        <div class="qr-box">
+                          <img src="<%= qrCodeUrl %>" alt="QR Code">
+                        </div>
+                        <div>
+                          <div class="pill">
+                            <span>
+                              <%= lang==="th" ? "โปรดชำระภายใน" : "Pay within" %>
+                            </span>
+                            <span class="timer" id="countdown">05:00</span>
+                          </div>
+                          <p class="hint" style="margin-top:16px;">
+                            <%= lang==="th"
+                              ? "สแกน QR ผ่านแอปธนาคารของคุณเพื่อชำระเงิน ระบบจะยืนยันอัตโนมัติภายหลัง หรือกดปุ่มยืนยันเมื่อชำระเสร็จ"
+                              : "Scan the QR with your banking app. The system will confirm shortly, or press Confirm after payment."
+                              %>
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="actions">
+                        <form action="/checkout" method="post">
+                          <input type="hidden" name="redirect" value="/payment/success">
+                          <button type="submit" class="btn btn--lg">
+                            <%= lang==="th" ? "ยืนยันการชำระเงิน" : "Confirm" %>
+                          </button>
+                        </form>
+                      </div>
+                    </article>
+                    <% } %>
+
+                      <% } else { %>
+                        <!-- ชำระสำเร็จ -->
+                        <article class="success-card">
+                          <div class="check">✔</div>
+                          <div class="big">
+                            <%= lang==="th" ? "ชำระเงินเรียบร้อย" : "Payment successful" %>
+                          </div>
+                          <div style="font-size: 25px;">
+                            <%= lang==="th" ? "เลขออเดอร์ของคุณ" : "Your order number" %>
+                          </div>
+                          <div class="order-id" style="font-size: 28px;">
+                            <%= orderId %>
+                          </div>
+                          <p class="hint">
+                            <%= lang==="th" ? "ขอบคุณที่ใช้บริการ กรุณารอเรียกคิวจากพนักงาน"
+                              : "Thanks for your order. Please wait for your pickup/serve." %>
+                          </p>
+                          <% if (cashier==='1' ) { %>
+                            <a class="btn btn--lg" href="/cashier">
+                              <%= lang==="th" ? "กลับหน้าแรก" : "Back to home" %>
+                            </a>
+                            <% } else { %>
+                              <a class="btn btn--lg" href="/">
+                                <%= lang==="th" ? "กลับหน้าแรก" : "Back to home" %>
+                              </a>
+                              <% } %>
+                        </article>
+                        <% } %>
     </section>
 
     <div class="bottom-space"></div>
   </main>
 
   <script>
-    // นับถอยหลัง 5 นาที เมื่ออยู่หน้า Payment (ยังไม่จ่าย)
+    // ⏱️ นับถอยหลัง 5 นาที (เฉพาะหน้า QR)
     (function () {
       const el = document.getElementById('countdown');
       if (!el) return;
@@ -390,5 +480,6 @@
     })();
   </script>
 </body>
+
 
 </html>

@@ -10,191 +10,215 @@
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <style>
-    :root {
-      --text: #fff;
-      --orange: #d88734;
-      --orange-2: #f0a24e;
-      --orange-3: #b56b22;
-      --font-ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
-    }
+/* ==========================================================
+ 🎨 GLOBAL VARIABLE (ตัวแปรสี ฟอนต์)
+========================================================== */
+:root {
+  --text: #fff;
+  --orange: #d88734;
+  --orange-2: #f0a24e;
+  --orange-3: #b56b22;
+  --font-ui: "Kanit", system-ui, -apple-system, "Noto Sans Thai", "Prompt", sans-serif;
+}
 
-    html,
-    body {
-      height: 100%;
-      margin: 0;
-      background: #0b0c0e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: system-ui, var(--font-ui);
-      color: var(--text);
-      overflow: hidden;
-    }
 
-    /* กรอบจอมือถือ/โปสเตอร์ */
-    .stage {
-      position: relative;
-      width: 1200px;
-      height: 2000px;
-      overflow: hidden;
-      border-radius: 18px;
-      background:
-        linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
-        url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
-      box-shadow: 0 40px 100px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .06);
-    }
+/* ==========================================================
+ 🧱 BASE LAYOUT (html / body)
+========================================================== */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: #0b0c0e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: system-ui, var(--font-ui); 
+  color: var(--text);
+  overflow: hidden;
+}
 
-    /* มุมขวาบน: เปลี่ยนภาษา + ธงเล็ก */
-    .lang {
-      position: absolute;
-      top: 72px;
-      right: 72px;
-      text-align: right;
-    }
 
-    .lang h3 {
-      margin: 0 4px 10px 0;
-      font-size: 22px;
-      font-weight: 600;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, .55);
-    }
+/* ==========================================================
+ 📱 MAIN STAGE (กรอบจอมือถือ / โปสเตอร์)
+========================================================== */
+.stage {
+  position: relative;
+  width: 1200px;
+  height: 2000px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
+    url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
+  box-shadow: 0 40px 100px rgba(0, 0, 0, .7), inset 0 0 0 1px rgba(255, 255, 255, .06);
+}
 
-    .flags {
-      display: flex;
-      gap: 12px;
-      justify-content: flex-end;
-    }
 
-    .flag-btn {
-      border: 0;
-      background: transparent;
-      padding: 0;
-      border-radius: 8px;
-      box-shadow: 0 0 12px rgba(252, 248, 236, .45), 0 0 28px rgba(247, 216, 122, .18);
-      transition: transform .12s ease, box-shadow .18s ease;
-    }
+/* ==========================================================
+ 🌐 LANGUAGE SWITCHER (มุมขวาบน)
+========================================================== */
+.lang {
+  position: absolute;
+  top: 72px;
+  right: 72px;
+  text-align: right;
+}
 
-    .flag-btn img {
-      display: block;
-      width: 88px;
-      height: 58px;
-      border-radius: 6px;
-      border: 1px solid rgba(255, 255, 255, .55);
-    }
+.lang h3 {
+  margin: 0 4px 10px 0;
+  font-size: 22px;
+  font-weight: 600;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, .55);
+}
 
-    .flag-btn:hover {
-      transform: scale(1.05);
-    }
+.flags {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
 
-    /* โลโก้กลางจอ */
-    .logo-wrap {
-      position: absolute;
-      top: 460px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      pointer-events: none;
-    }
+.flag-btn {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(252, 248, 236, .45), 0 0 28px rgba(247, 216, 122, .18);
+  transition: transform .12s ease, box-shadow .18s ease;
+}
 
-    .logo {
-      width: 720px;
-      height: 720px;
-      object-fit: contain;
-      border-radius: 50%;
-      filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55));
-    }
+.flag-btn img {
+  display: block;
+  width: 88px;
+  height: 58px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, .55);
+}
 
-    /* ข้อความ "สั่งอาหารได้ที่นี่" */
-    .tagline {
-      position: absolute;
-      top: 1350px;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-size: 48px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      text-shadow: 0 3px 12px rgba(0, 0, 0, .65);
-    }
+.flag-btn:hover {
+  transform: scale(1.05);
+}
 
-    /* ปุ่มสองอันด้านล่าง */
-    .actions {
-      position: absolute;
-      bottom: 180px;
-      left: 0;
-      right: 0;
-      display: flex;
-      gap: 80px;
-      justify-content: center;
-    }
 
-    .action {
-      width: 300px;
-      height: 300px;
-      border-radius: 28%;
-      text-decoration: none;
-      color: var(--text);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0;
-      background:
-        radial-gradient(180px 120px at 50% 22%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
-        linear-gradient(180deg, var(--orange-2), var(--orange));
-      border: 1px solid rgba(255, 255, 255, .08);
-      box-shadow:
-        0 20px 40px rgba(0, 0, 0, .35),
-        0 0 40px rgba(208, 135, 52, .35);
-      position: relative;
-      overflow: hidden;
-      transition: transform .12s ease, box-shadow .18s ease, filter .18s ease;
-    }
+/* ==========================================================
+ 🥗 LOGO CENTER (โลโก้กลางจอ)
+========================================================== */
+.logo-wrap {
+  position: absolute;
+  top: 460px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+}
 
-    .action:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 26px 48px rgba(0, 0, 0, .45),
-        0 0 52px rgba(208, 135, 52, .45);
-      filter: saturate(1.05);
-    }
+.logo {
+  width: 720px;
+  height: 720px;
+  object-fit: contain;
+  border-radius: 50%;
+  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .55));
+}
 
-    .action:active {
-      transform: translateY(0);
-    }
 
-    .icon {
-      width: 190px;
-      height: 180px;
-      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35));
-    }
+/* ==========================================================
+ 📝 TAGLINE (ข้อความ “สั่งอาหารได้ที่นี่”)
+========================================================== */
+.tagline {
+  position: absolute;
+  top: 1350px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  text-shadow: 0 3px 12px rgba(0, 0, 0, .65);
+}
 
-    .action span {
-      font-size: 40px;
-      font-weight: 800;
-      text-shadow: 0 2px 8px rgba(0, 0, 0, .55);
-    }
 
-    .action::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
-      mix-blend-mode: multiply;
-      opacity: 100%;
-      pointer-events: none;
-    }
+/* ==========================================================
+ 🍽️ ACTION BUTTONS (ปุ่มทานที่ร้าน / ทานที่บ้าน)
+========================================================== */
+.actions {
+  position: absolute;
+  bottom: 180px;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 80px;
+  justify-content: center;
+}
 
-    .action--sharp-tr {
-      border-radius: 100px 10px 100px 100px;
-    }
+.action {
+  width: 300px;
+  height: 300px;
+  border-radius: 28%;
+  text-decoration: none;
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  background:
+    radial-gradient(180px 120px at 50% 22%, rgba(255, 255, 255, .18), rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, var(--orange-2), var(--orange));
+  border: 1px solid rgba(255, 255, 255, .08);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, .35),
+    0 0 40px rgba(208, 135, 52, .35);
+  position: relative;
+  overflow: hidden;
+  transition: transform .12s ease, box-shadow .18s ease, filter .18s ease;
+}
 
-    .action--sharp-bl {
-      border-radius: 100px 80px 100px 10px;
-    }
+.action:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 26px 48px rgba(0, 0, 0, .45),
+    0 0 52px rgba(208, 135, 52, .45);
+  filter: saturate(1.05);
+}
 
-    /* ✅ Responsive สำหรับ iPad Gen 7–10 (แนวตั้ง/แนวนอน) */
+.action:active {
+  transform: translateY(0);
+}
+
+.icon {
+  width: 190px;
+  height: 180px;
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .35));
+}
+
+.action span {
+  font-size: 40px;
+  font-weight: 800;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, .55);
+}
+
+.action::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');
+  mix-blend-mode: multiply;
+  opacity: 100%;
+  pointer-events: none;
+}
+
+.action--sharp-tr {
+  border-radius: 100px 10px 100px 100px;
+}
+
+.action--sharp-bl {
+  border-radius: 100px 80px 100px 10px;
+}
+
+
+/* ==========================================================
+ 📱 RESPONSIVE : iPad Gen 7–10 (แนวตั้ง / แนวนอน)
+========================================================== */
 @media (max-width: 1024px) {
 
   /* ปรับกรอบหลัก */
@@ -267,7 +291,10 @@
   }
 }
 
-/* ✅ แนวนอน (landscape) ปรับ layout ให้บาลานซ์ */
+
+/* ==========================================================
+ 💻 RESPONSIVE : LANDSCAPE MODE (แนวนอน)
+========================================================== */
 @media (max-height: 850px) and (orientation: landscape) {
   .logo-wrap {
     top: 20%;
@@ -306,18 +333,18 @@
     <!-- มุมขวาบน -->
     <div class="lang">
       <div class="flags">
-        <a href="/lang/th" class="flag-btn" aria-label="ภาษาไทย">
+        <a href="/lang/th" class="flag-btn">
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/8/85/Flag_of_Thailand_%28proposed_shade_of_colours%29.png"
             alt="TH">
         </a>
-        <a href="/lang/en" class="flag-btn" aria-label="English">
+        <a href="/lang/en" class="flag-btn" >
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Flag_of_the_United_Kingdom_%283-5%29.svg/512px-Flag_of_the_United_Kingdom_%283-5%29.svg.png"
             alt="EN">
         </a>
       </div>
-    </div>
+    </div>  
 
     <!-- โลโก้กลาง -->
     <div class="logo-wrap">
@@ -331,14 +358,14 @@
 
     <!-- ปุ่มเลือก -->
     <div class="actions">
-      <a class="action action--sharp-bl" href="/order-type?order_type=DINE_IN" aria-label="ทานที่ร้าน">
+      <a class="action action--sharp-bl" href="/order-type?order_type=DINE_IN" >
         <img src="/img/firstpage/diein.png" alt="dine-in" class="icon">
         <span>
           <%= lang==="th" ? "ทานที่ร้าน" : "Dine In" %>
         </span>
       </a>
 
-      <a class="action action--sharp-tr" href="/order-type?order_type=TAKEAWAY" aria-label="ทานที่บ้าน">
+      <a class="action action--sharp-tr" href="/order-type?order_type=TAKEAWAY" >
         <img src="/img/firstpage/home.png" alt="home" class="icon">
         <span>
           <%= lang==="th" ? "ทานที่บ้าน" : "Take Home" %>
@@ -346,7 +373,6 @@
       </a>
     </div>
 
-    <div aria-hidden="true"></div>
   </main>
 </body>
 

@@ -369,6 +369,77 @@
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum" 1, "lnum" 1;
   }
+
+  /* ==========================================================
+📱 MOBILE / TABLET FIXED SCROLL BEHAVIOR (iPhone / iPad / Android)
+========================================================== */
+@media (max-width: 1024px) {
+
+  /* 🔒 ล็อกทั้งหน้าให้อยู่กับที่ */
+  html,
+  body {
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* ❗️ไม่ให้ทั้งหน้า scroll */
+    background: #000;
+    touch-action: none; /* ป้องกันการลากทั้งหน้า */
+  }
+
+  /* ✅ เฟรมหลักของหน้า (เหมือนแอปเต็มจอ) */
+  .stage {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    transform: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(0, 0, 0, .15),
+                rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
+                url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
+  }
+
+  /* ✅ ส่วนเลื่อนภายในเท่านั้นที่ scroll ได้ */
+  .scroll-area {
+    position: absolute;
+    top: 84px;         /* เว้น header */
+    bottom: 140px;     /* เว้น checkout ด้านล่าง */
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain; /* ป้องกัน bounce ทั้งหน้า */
+    touch-action: pan-y;          /* ✅ เลื่อนเฉพาะแนวตั้ง */
+    background: transparent;
+  }
+
+  /* ✅ แถบ checkout ติดล่างเสมอ */
+  .checkout {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-width: 100%;
+    border-radius: 0;
+    padding: 20px 32px;
+  }
+
+  /* ✅ header ติดบนสุด */
+  .topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+  }
+}
+
 </style>
 
 </head>
@@ -376,7 +447,7 @@
 <body>
   <main class="stage">
     <header class="topbar">
-      <a href="/main" class="back" aria-label="<%= lang==='th' ? 'กลับ' : 'Back' %>">‹</a>
+      <a href="/main" class="back">‹</a>
       <h1>
         <%= lang==="th" ? "ตะกร้าอาหาร" : "Cart" %>
       </h1>
@@ -484,7 +555,7 @@
                   </span>
                   <span class="value">฿ <%= total %></span>
                 </div>
-                <a class="pay-btn" href="/payment">
+                <a class="pay-btn" href="/payment?total=<%= total %>">
                   <%= lang==="th" ? "ชำระเงิน" : "Pay now" %>
                 </a>
               </div>

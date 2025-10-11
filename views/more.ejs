@@ -44,7 +44,7 @@
       width: 1200px;
       height: 2000px;
       overflow: hidden;
-      border-radius: 18px;
+      border-radius: 0;
       background:
         linear-gradient(180deg, rgba(0, 0, 0, .15), rgba(0, 0, 0, .65) 55%, rgba(0, 0, 0, .85)),
         url('/img/firstpage/BGHomepage.png') center/cover no-repeat;
@@ -393,7 +393,7 @@
 
 <body>
   <main class="stage">
-    <a href="/main" class="close-btn" aria-label="close">×</a>
+    <a href="/main" class="close-btn">×</a>
 
     <div class="hero">
       <img src="/img/menu/<%= item.category_id %>/<%= item.name_eng %>.png" alt="<%= item.name %>">

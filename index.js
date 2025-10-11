@@ -53,7 +53,8 @@ app.get("/lang/:lng", (req, res) => {
 
 
 app.get("/", (req, res) => {
-    const lang = getLang(req);
+  const lang = getLang(req);
+  if (req.session.cashier) { delete req.session.cashier; }
   res.render('home', { lang, order_type: req.session.order_type });
 });
 
@@ -98,39 +99,39 @@ app.get('/menu', function (req, res) {
     });
 });
 
-// path ของเมนูหมวดหมู่ PASTA & RICE
-app.get('/pasta', function (req, res) {
-    const lang = getLang(req);
-    const nameCol = lang === "th" ? "name_thai" : "name_eng";
-    const detailCol = lang === "th" ? "detail" : "detail_eng";
+// // path ของเมนูหมวดหมู่ PASTA & RICE
+// app.get('/pasta', function (req, res) {
+//     const lang = getLang(req);
+//     const nameCol = lang === "th" ? "name_thai" : "name_eng";
+//     const detailCol = lang === "th" ? "detail" : "detail_eng";
 
-    const query = `SELECT menu_item_id, category_id, ${nameCol} AS name, ${detailCol} AS detail, base_price 
-                 FROM MenuItem WHERE category_id = 2`;
-    db.all(query, (err, rows) => {
-        if (err) {
-            console.log(err.message);
-        }
-        console.log(rows);
-        res.render('menu_pasta', { data: rows, lang });
-    });
-});
+//     const query = `SELECT menu_item_id, category_id, ${nameCol} AS name, ${detailCol} AS detail, base_price 
+//                  FROM MenuItem WHERE category_id = 2`;
+//     db.all(query, (err, rows) => {
+//         if (err) {
+//             console.log(err.message);
+//         }
+//         console.log(rows);
+//         res.render('menu_pasta', { data: rows, lang });
+//     });
+// });
 
-// path ของเมนูหมวดหมู่ Steak
-app.get('/steak', function (req, res) {
-    const lang = getLang(req);
-    const nameCol = lang === "th" ? "name_thai" : "name_eng";
-    const detailCol = lang === "th" ? "detail" : "detail_eng";
+// // path ของเมนูหมวดหมู่ Steak
+// app.get('/steak', function (req, res) {
+//     const lang = getLang(req);
+//     const nameCol = lang === "th" ? "name_thai" : "name_eng";
+//     const detailCol = lang === "th" ? "detail" : "detail_eng";
 
-    const query = `SELECT menu_item_id, category_id, ${nameCol} AS name, ${detailCol} AS detail, base_price 
-                 FROM MenuItem WHERE category_id = 3`;
-    db.all(query, (err, rows) => {
-        if (err) {
-            console.log(err.message);
-        }
-        console.log(rows);
-        res.render('menu_steak', { data: rows, lang });
-    });
-});
+//     const query = `SELECT menu_item_id, category_id, ${nameCol} AS name, ${detailCol} AS detail, base_price 
+//                  FROM MenuItem WHERE category_id = 3`;
+//     db.all(query, (err, rows) => {
+//         if (err) {
+//             console.log(err.message);
+//         }
+//         console.log(rows);
+//         res.render('menu_steak', { data: rows, lang });
+//     });
+// });
 
 app.listen(port, () => {
     console.log(`Starting server at port ${port}`);
@@ -213,6 +214,7 @@ app.post("/add-to-cart", (req, res) => {
 app.get("/cart", (req, res) => {
   // 🔹 ตรวจภาษาที่ผู้ใช้เลือก (ไทย/อังกฤษ)
   const lang = getLang(req);
+  const cashier = req.session.cashier === '1' ? '1' : '0';
 
   // 🔹 เลือกคอลัมน์ชื่อ/รายละเอียดตามภาษา
   const nameCol = lang === "th" ? "name_thai" : "name_eng";
@@ -223,7 +225,7 @@ app.get("/cart", (req, res) => {
 
   // ถ้าไม่มีสินค้าเลย → แสดงหน้าตะกร้าว่าง
   if (cart.length === 0) {
-    return res.render("cart", { data: [], lang });
+    return res.render("cart", { data: [], lang , cashier});
   }
 
   // 🔹 รวบรวม menu_item_id ทั้งหมดที่อยู่ใน cart
@@ -236,7 +238,7 @@ app.get("/cart", (req, res) => {
   db.all(query, (err, menuRows) => {
     if (err) {
       console.error(err.message);
-      return res.render("cart", { data: [], lang });
+      return res.render("cart", { data: [], lang , cashier});
     }
 
     // 🔹 สร้างรายการสินค้าแบบ 1:1 กับใน session
@@ -267,7 +269,7 @@ app.get("/cart", (req, res) => {
         m.options = [];
         m.final_price = m.base_price;
       });
-      return res.render("cart", { data: merged, lang });
+      return res.render("cart", { data: merged, lang, cashier });
     }
 
     // 🔹 Query option_value ทั้งหมด (เพื่อเอาชื่อไทย/อังกฤษมาแสดง)
@@ -280,7 +282,7 @@ app.get("/cart", (req, res) => {
     db.all(optionQuery, (err2, optionRows) => {
       if (err2) {
         console.error(err2.message);
-        return res.render("cart", { data: merged, lang });
+        return res.render("cart", { data: merged, lang, cashier });
       }
 
       // 🔹 เติมข้อมูล option (ชื่อ + ราคาเพิ่ม) กลับเข้าไปในแต่ละเมนู
@@ -304,7 +306,7 @@ app.get("/cart", (req, res) => {
       });
 
       // ✅ ส่งข้อมูลทั้งหมดไปหน้า cart.ejs
-      res.render("cart", { data: merged, lang });
+      res.render("cart", { data: merged, lang , cashier});
     });
   });
 });
@@ -473,27 +475,6 @@ app.get('/kitchen/:orderId', (req, res) => {
   res.render('kitchen_detail', { orderId: req.params.orderId, lang: getLang(req) });
 });
 
-// app.get('/api/kitchen', (req, res) => {
-//   const status = (req.query.status || 'PENDING').toUpperCase(); // PENDING | DONE | ALL
-//   const where = (status === 'ALL') ? '' : 'WHERE o.status = ?';
-//   const params = (status === 'ALL') ? [] : [status];
-
-//   const sql = `
-//     SELECT 
-//       o.order_id, o.order_type, o.status,
-//       oi.order_item_id, oi.quantity,
-//       m.name_thai AS item_name_th, m.name_eng AS item_name_en
-//     FROM "Order" o
-//     JOIN OrderItem oi ON oi.order_id = o.order_id
-//     JOIN MenuItem  m  ON m.menu_item_id = oi.menu_item_id
-//     ${where}
-//     ORDER BY o.order_id ASC, oi.order_item_id ASC
-//   `;
-//   db.all(sql, params, (err, rows) => {
-//     if (err) return res.status(500).json({ error: err.message });
-//     res.json(rows);
-//   });
-// });
 
 app.get('/api/kitchen', (req, res) => {
   const status = (req.query.status || 'PENDING').toUpperCase();
@@ -517,48 +498,6 @@ app.get('/api/kitchen', (req, res) => {
     res.json(rows);
   });
 });
-
-
-// app.get('/api/kitchen/order/:orderId', (req, res) => {
-//   const sql = `
-//     SELECT 
-//       o.order_id, o.order_type, o.status,
-//       oi.order_item_id, oi.quantity, oi.note AS item_note
-//       m.category_id AS category_id,              -- ✅ เพิ่มบรรทัดนี้
-//       m.name_thai AS item_name_th, m.name_eng AS item_name_en,
-      
-//     (
-//         SELECT GROUP_CONCAT(ov.name, ', ')
-//         FROM OrderItemOption oio
-//         JOIN Option_Value ov ON ov.option_value_id = oio.option_value_id
-//         JOIN Option_Group og ON og.option_group_id = ov.option_group_id
-//         WHERE oio.order_item_id = oi.order_item_id
-//         ORDER BY og.option_group_id, ov.option_value_id 
-//       ) AS options_text
-
-
-//     FROM "Order" o
-//     JOIN OrderItem oi ON oi.order_id = o.order_id
-//     JOIN MenuItem  m  ON m.menu_item_id = oi.menu_item_id
-//     WHERE o.order_id = ?
-//     ORDER BY oi.order_item_id ASC
-//   `;
-//   db.all(sql, [req.params.orderId], (err, rows) =>
-//     err ? res.status(500).json({ error: err.message }) : res.json(rows)
-//   );
-// });
-
-// app.all('/api/kitchen/orders/:orderId/done', (req, res) => {
-//   if (!['PATCH', 'POST'].includes(req.method)) return res.status(405).json({ error: 'Method not allowed' });
-//   const id = parseInt(req.params.orderId, 10);
-//   if (Number.isNaN(id)) return res.status(400).json({ error: 'bad orderId' });
-
-//   db.run(`UPDATE "Order" SET status='DONE' WHERE order_id=?`, [id], function (err) {
-//     if (err) return res.status(500).json({ error: err.message });
-//     // this.changes = 0 ถ้าอัปเดตก่อนหน้าเป็น DONE อยู่แล้ว
-//     res.json({ ok: true, order_id: id, changes: this.changes });
-//   });
-// });
 
 // GET one order (with item_note, category_id, options_text)
 app.get('/api/kitchen/order/:orderId', (req, res) => {
@@ -620,36 +559,51 @@ app.all('/api/kitchen/orders/:orderId/done', (req, res) => {
 
 // Payment 
 app.get('/payment', (req, res) => {
-  // 🔹 ตรวจภาษาที่ผู้ใช้เลือก (ไทย/อังกฤษ)
-  const lang = getLang(req);
   
+  const method = (req.query.method || '').toLowerCase();
+  const cashier = req.session.cashier === '1' ? '1' : '0';
+  const lang = getLang(req);
+
+  const total = req.query.total;
+  console.log(total);
+
   res.render('payment', {
     paid: false,
-    amount: 199.00,
+    total,
     qrCodeUrl: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=PAYMENT-DEMO",
-    lang
+    lang,
+    cashier,
+    method
   });
 });
 
 // หน้าแสดงผลชำระเงินเสร็จ
 app.get('/payment/success', (req, res) => {
   const lang = getLang(req);
+  const cashier = req.session.cashier === '1' ? '1' : '0';
+  console.log('Cashier success:', cashier);
 
   res.render('payment', {
     paid: true,
     orderId: "123456",
-    lang
+    lang,
+    cashier
   });
 });
 
+app.get('/cashier', function (req, res) {
 
-// ชั่วคราว: ดูสถานะและจำนวนนับ
-app.get('/debug/kitchen', (req, res) => {
-  db.serialize(() => {
-    db.all(`SELECT order_id, status FROM "Order" ORDER BY order_id DESC LIMIT 5`, (e1, r1) => {
-      db.all(`SELECT order_id, COUNT(*) as items FROM OrderItem GROUP BY order_id ORDER BY order_id DESC LIMIT 5`, (e2, r2) => {
-        res.json({ orders: r1 || [], items: r2 || [], err1: e1 && e1.message, err2: e2 && e2.message });
-      });
-    });
+  const lang = getLang(req);
+  const nameCol = lang === "th" ? "name_thai" : "name_eng";
+  const detailCol = lang === "th" ? "detail" : "detail_eng";
+  if (!req.session.cashier) req.session.cashier = '1';
+  
+  const query = `SELECT menu_item_id,base_price,category_id,name_eng, category_id, ${nameCol} AS name, ${detailCol} AS detail, base_price 
+                 FROM MenuItem`;
+  db.all(query, (err, rows) => {
+    if (err) {
+      console.log(err.message);
+    }
+    res.render('main_menu', { data: rows, lang });
   });
 });
